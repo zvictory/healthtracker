@@ -4,6 +4,7 @@ import { useBowel } from '../hooks/useBowel'
 import BowelLogForm from '../components/bowel/BowelLogForm'
 import BowelHistory from '../components/bowel/BowelHistory'
 import BowelAlert from '../components/bowel/BowelAlert'
+import BottomSheet from '../components/shared/BottomSheet'
 import PageHeader from '../components/shared/PageHeader'
 
 export default function BowelJournal() {
@@ -43,15 +44,19 @@ export default function BowelJournal() {
         )}
 
         {/* Log button */}
-        {!showForm ? (
-          <button
-            onClick={() => setShowForm(true)}
-            className="w-full py-4 rounded-xl bg-primary text-white font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform cursor-pointer"
-          >
-            <Plus size={20} />
-            Qayd qilish
-          </button>
-        ) : (
+        <button
+          onClick={() => setShowForm(true)}
+          className="w-full py-4 rounded-xl bg-primary text-white font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform cursor-pointer"
+        >
+          <Plus size={20} />
+          Qayd qilish
+        </button>
+
+        <BowelHistory history={history} />
+      </div>
+
+      {showForm && (
+        <BottomSheet title="Ich kelishini qayd qilish" onClose={() => setShowForm(false)}>
           <BowelLogForm
             onSave={(consistency, notes) => {
               logBowelMovement(consistency, notes)
@@ -59,10 +64,8 @@ export default function BowelJournal() {
             }}
             onCancel={() => setShowForm(false)}
           />
-        )}
-
-        <BowelHistory history={history} />
-      </div>
+        </BottomSheet>
+      )}
     </div>
   )
 }

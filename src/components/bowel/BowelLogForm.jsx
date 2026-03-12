@@ -13,7 +13,7 @@ export default function BowelLogForm({ onSave, onCancel }) {
   const [notes, setNotes] = useState('')
 
   return (
-    <div className="card p-4 animate-fade-in">
+    <div className="animate-fade-in">
       <h3 className="text-sm font-semibold mb-3">Konsistensiya tanlang</h3>
 
       <div className="grid grid-cols-2 gap-2 mb-4">
