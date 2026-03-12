@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Bell, Moon, Droplets, Trash2, Apple, Info, ChevronDown } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Bell, Moon, Droplets, Trash2, Apple, Info, ChevronDown, RotateCcw } from 'lucide-react'
 import { useDaily } from '../hooks/useDaily'
 import { useDarkMode } from '../hooks/useDarkMode'
 import { useNotifications } from '../hooks/useNotifications'
+import { useOnboarding } from '../hooks/useOnboarding'
 import ReminderSettings from '../components/settings/ReminderSettings'
 import DarkModeToggle from '../components/settings/DarkModeToggle'
 import NotificationPermission from '../components/settings/NotificationPermission'
@@ -14,6 +15,8 @@ export default function Settings() {
   const { todayData, updateTodayData } = useDaily()
   const { mode, setDarkMode } = useDarkMode()
   const { permission, isSupported, reminders, requestPermission, updateReminder } = useNotifications()
+  const { resetOnboarding } = useOnboarding()
+  const navigate = useNavigate()
   const [showReminders, setShowReminders] = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
 
@@ -29,6 +32,7 @@ export default function Settings() {
     localStorage.removeItem('healthtracker_settings')
     localStorage.removeItem('healthtracker_reminders')
     localStorage.removeItem('healthtracker_darkmode')
+    localStorage.removeItem('healthtracker_onboarding')
     window.location.reload()
   }
 
@@ -105,10 +109,19 @@ export default function Settings() {
           <span className="text-xs">→</span>
         </Link>
 
+        {/* Restart onboarding */}
+        <button
+          onClick={() => { resetOnboarding(); navigate('/onboarding') }}
+          className="w-full card p-4 flex items-center gap-3 cursor-pointer"
+        >
+          <RotateCcw size={20} className="text-[var(--color-text-secondary)]" />
+          <span className="text-sm font-semibold">Qayta tanishtiruv</span>
+        </button>
+
         {/* Clear data */}
         <button
           onClick={() => setShowClearConfirm(true)}
-          className="w-full card p-4 flex items-center gap-3"
+          className="w-full card p-4 flex items-center gap-3 cursor-pointer"
         >
           <Trash2 size={20} className="text-[var(--color-danger)]" />
           <span className="text-sm font-semibold text-[var(--color-danger)]">Ma'lumotlarni tozalash</span>

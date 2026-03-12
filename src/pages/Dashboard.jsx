@@ -4,6 +4,7 @@ import { useDaily } from '../hooks/useDaily'
 import { useScore } from '../hooks/useScore'
 import { useStreak } from '../hooks/useStreak'
 import { useBowel } from '../hooks/useBowel'
+import { useOnboarding } from '../hooks/useOnboarding'
 import HealthScoreCard from '../components/dashboard/HealthScoreCard'
 import QuickStats from '../components/dashboard/QuickStats'
 import MoodSelector from '../components/dashboard/MoodSelector'
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const score = useScore()
   const { currentStreak } = useStreak()
   const { daysSinceLast, alertLevel } = useBowel()
+  const { profile } = useOnboarding()
 
   return (
     <div className="min-h-screen">
@@ -30,7 +32,9 @@ export default function Dashboard() {
       <div className="px-4 lg:px-6 pt-6 lg:pt-8 pb-2 flex items-center justify-between">
         <div>
           <p className="text-sm text-[var(--color-text-tertiary)] font-medium">{getGreeting()}</p>
-          <h1 className="text-xl lg:text-2xl font-bold tracking-tight mt-0.5">Bugungi holatni kuzating</h1>
+          <h1 className="text-xl lg:text-2xl font-bold tracking-tight mt-0.5">
+            {profile.name ? `${profile.name}, bugungi holatni kuzating` : 'Bugungi holatni kuzating'}
+          </h1>
         </div>
         <Link
           to="/settings"
