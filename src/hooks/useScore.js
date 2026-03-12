@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
 import { useDaily } from './useDaily'
+import { useProfile } from './useProfile'
 import { calculateScore } from '../utils/scoreCalculator'
 
 export function useScore() {
   const { todayData, updateTodayData } = useDaily()
-  const score = calculateScore(todayData)
+  const { profile } = useProfile()
+  const score = calculateScore(todayData, profile.taskSet)
 
   useEffect(() => {
     if (todayData.score !== score) {

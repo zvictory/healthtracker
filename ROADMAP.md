@@ -6,11 +6,19 @@
 
 ## 1. Project Identity
 
-You are working on **Sog'liq Kuzatuvchi** (HealthTracker), a Progressive Web App for breastfeeding mothers to track constipation prevention habits. All UI text is in **Uzbek (Latin script)**. The app is being evolved from a localStorage-only PWA into a full multi-user platform with backend, authentication, RBAC, Telegram bot integration, and modern gamification.
+You are working on **Sog'liq Kuzatuvchi** (HealthTracker), a Progressive Web App for **daily health habit tracking**. The app serves multiple health profiles — breastfeeding mothers managing constipation, people with insulin resistance tracking sugar-free habits, anyone pursuing fat burning and weight loss, and general wellness tracking. All UI text is in **Uzbek (Latin script)**. The app is being evolved from a localStorage-only PWA into a full multi-user platform with backend, authentication, RBAC, Telegram bot integration, and modern gamification.
 
-**Target user**: Breastfeeding mothers in Uzbekistan, ages 20-40, budget Android phones, intermittent connectivity. The app must be fast, offline-capable, and feel rewarding to use daily.
+**CRITICAL ARCHITECTURE PRINCIPLE**: The app is **profile-driven, not persona-locked**. Every feature — tasks, food guide, tips, scoring formula, alerts, achievements — adapts based on the user's health profile selected during onboarding. No hardcoded content should assume a specific user type.
 
-**Competitive benchmark**: The app should feel as polished as Garmin Connect, Fitbit, Headspace, or Noom — not a hobby project. Reference apps: Gentler Streak (Apple Design Award for sustainable fitness UX), Calm (3x retention from smart reminders), Yoga-Go ($2M/month from great onboarding), MySugr (gamified chronic health tracking).
+**Target users**:
+- Breastfeeding mothers (constipation prevention, hydration, bowel tracking)
+- People with insulin resistance (sugar-free habits, blood glucose, meal tracking)
+- Fat burning / weight loss (calorie deficit, exercise, body metrics)
+- General wellness (balanced habits, hydration, mood, activity)
+
+**Target region**: Uzbekistan, ages 18-50, budget Android phones, intermittent connectivity.
+
+**Competitive benchmark**: Garmin Connect, Fitbit, Headspace, Noom, Gentler Streak, Calm, Yoga-Go, MySugr.
 
 ---
 
@@ -73,7 +81,6 @@ src/                          # ~2,148 lines, 55 files
 ```
 
 ### Known Bugs & Issues
-
 1. **useScore.js** — useEffect writes score back to todayData on every render cycle. `todayData.score !== score` guard exists but fragile with object references. Add useMemo.
 2. **useStreak.js** — `getHistoricalData(30)` creates new array reference each render → achievements re-check every render. Add memoization.
 3. **vite.config.js** — PWA manifest references `.png` icons but `/public` only has `.svg`. Install prompt will fail.
@@ -81,7 +88,6 @@ src/                          # ~2,148 lines, 55 files
 5. **No BottomSheet** — BowelLogForm is full-page navigation for a 10-second action.
 
 ### Design System (from index.css)
-
 ```css
 --color-primary: #0D9488;      /* Teal — nav, active */
 --color-success: #10B981;      /* Emerald — completed, good */
@@ -90,14 +96,12 @@ src/                          # ~2,148 lines, 55 files
 --color-danger: #EF4444;       /* Red — 5-day alert, harmful */
 --color-accent: #8B5CF6;       /* Violet — mood, achievements */
 ```
-
 - Cards: shadow-first depth (no borders), 20px radius
 - Dark mode: `.dark` class, variable swap, auto after 20:00
 - Responsive: mobile-first, bottom nav mobile, 260px sidebar desktop (lg:1024px+)
 - Animations: fadeIn, scaleIn, slideUp, confetti-fall, flame, pulse-soft — all respect prefers-reduced-motion
 
 ### Data Model (localStorage)
-
 ```js
 {
   date: "2026-03-13",
@@ -109,7 +113,6 @@ src/                          # ~2,148 lines, 55 files
   custom_tasks: []
 }
 ```
-
 **Scoring**: `(tasks_done/total × 70) + (min(water/target, 1) × 20) + (bowel ? 10 : 0)`
 
 ---
@@ -119,20 +122,17 @@ src/                          # ~2,148 lines, 55 files
 These are the patterns that separate top-rated health apps from mediocre ones. Apply to every component you build.
 
 ### 4.1 First Impression (Onboarding)
-
 - **Personalized onboarding quiz (3-5 screens)**: Tailors the entire experience from day one. Yoga-Go generates $2M/month partly from this. Ask goals, health state, reminder preferences. Pre-fill settings based on answers.
 - **Instant value on first screen**: After onboarding, show a pre-filled dashboard with today's plan immediately. Never show an empty state to a new user — pre-populate defaults.
 - **Zero-friction first action**: The first thing a user does should take ONE tap and give instant feedback (e.g., "Tap to log your first glass of water" → splash animation + encouraging text).
 
 ### 4.2 Daily Engagement Loop
-
 - **One-tap logging**: The #1 rule. Never require more than one tap for the most common action. Water: tap = +1 glass. Task: tap = toggle done. This is non-negotiable.
 - **Undo instead of confirm**: Don't ask "Are you sure?" for reversible actions. Log immediately, show 5-second toast with "Undo" button. Cuts interaction time in half. Garmin and Fitbit both use this.
 - **Time-grouped task lists**: Morning/Daytime/Evening sections. Auto-collapse past time blocks. Auto-expand current group. Reduces cognitive load.
 - **Swipe gestures**: Swipe right = complete, swipe left = skip. Long-press for details. Gesture-driven tracking feels faster than buttons on mobile.
 
 ### 4.3 Gamification & Motivation
-
 - **Streak system with shields**: Consecutive-day counter with visual flame icon. "Streak shields" forgive 1 missed day per week (Duolingo pattern). Losing a long streak is the #1 retention killer — prevent it.
 - **Achievement badges with tiers**: 15-25 badges, each with bronze/silver/gold tiers. Displayed on profile. Shareable to social/Telegram. Locked badges show preview to motivate.
 - **XP & level system**: Daily score feeds lifetime XP. Levels 1-50 with milestone names. Profile shows level prominently. Creates long-term progression beyond daily tracking.
@@ -141,7 +141,6 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 - **Progressive urgency reminders**: 1st: gentle ("Suv ichish vaqti!"). 2nd: contextual ("4/10 stakan, 3 soat qoldi"). 3rd: kind ("Ertaga yangi kun — o'zingizni ayablamang"). Never nag.
 
 ### 4.4 Data & Insights
-
 - **Weekly trend mini-charts**: Sparkline on dashboard cards showing 7-day trends. Score up? Green arrow. Water dropping? Amber warning. Patterns at a glance.
 - **Monthly heatmap calendar**: GitHub-style grid where each day's color = health score. Instant visual of consistency over 30/90 days. (You already have this — keep it.)
 - **AI weekly summary**: Natural language recap in Uzbek: "Bu hafta 82% o'rtacha ball (+5%). Seshanba va payshanba ertalab suv o'tkazildi. Ich kelishi yaxshilandi — kefirni davom ettiring!"
@@ -149,14 +148,12 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 - **Exportable PDF reports**: Doctor-friendly PDF with charts, bowel frequency, water trends, score history. QR code linking to live dashboard. Essential for doctor-patient workflow.
 
 ### 4.5 Visual Design System
-
 - **Soft, rounded, minimal UI**: No sharp edges, no heavy borders. Large border-radius (16-20px), subtle shadows, generous whitespace. Calming palette — teal/sage primary. Think Headspace, not Excel.
 - **Dark mode (auto + manual)**: Auto-switch after 20:00 or system. 82% of mobile users enable dark mode. Muted teal/blue accents on dark backgrounds. (You have this — it's good.)
 - **Illustration-first empty states**: Warm SVG illustration + encouraging Uzbek text + CTA button. Never a blank screen. "Bugun boshlang — birinchi stakan suvni kiriting!"
 - **Micro-interactions everywhere**: Button press scales (0.97), cards lift on hover, progress rings animate with spring physics. Every interaction should feel alive. Use framer-motion.
 
 ### 4.6 Platform & Accessibility
-
 - **PWA native feel**: Standalone mode, pull-to-refresh, bottom sheet modals, haptic feedback. Should feel indistinguishable from native app.
 - **Offline-first**: All tracking works without internet. Queue syncs on reconnect. Critical for Uzbekistan connectivity.
 - **Accessibility**: 4.5:1 contrast, 44px touch targets, screen reader labels, reduced-motion mode. Health apps serve vulnerable users — a11y is not optional.
@@ -164,24 +161,218 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 
 ---
 
-## 5. Complete Feature Specifications (with Priority Tiers)
+## 4B. Health Profile System (CRITICAL — drives everything)
+
+The app adapts entirely based on the user's health profile. Onboarding creates the profile, which determines: active modules, task sets, food guides, tips, scoring weights, alert rules, and achievements.
+
+### Health Profile Data Model
+```js
+// Stored in localStorage: healthtracker_profile (later in users table)
+{
+  name: "Nilufar",
+  gender: "female",              // "male" | "female"
+  age: 28,
+  goals: ["constipation", "hydration"],  // multi-select from onboarding
+  conditions: ["breastfeeding"],          // health conditions
+  activeModules: ["tasks", "water", "bowel", "mood", "food_guide"],
+  taskSet: "breastfeeding_constipation",  // determines which defaultTasks load
+  scoringWeights: { tasks: 70, water: 20, bowel: 10 },
+  waterTarget: 10,
+  createdAt: "2026-03-13"
+}
+```
+
+### Available Goals (onboarding multi-select)
+| Goal ID | Uzbek Label | Description |
+|---------|-------------|-------------|
+| `constipation` | Ich qotishining oldini olish | Constipation prevention |
+| `insulin_resistance` | Insulin qarshilik boshqaruvi | Insulin resistance management |
+| `sugar_free` | Shakarsiz hayot | Sugar-free living |
+| `fat_burning` | Yog' yoqish | Fat burning / weight loss |
+| `general_wellness` | Umumiy salomatlik | General wellness |
+| `hydration` | Suv ichish odati | Hydration habit |
+| `gut_health` | Ichak salomatligi | Gut health |
+| `postpartum` | Tug'ruqdan keyingi tiklanish | Postpartum recovery |
+
+### Available Modules
+| Module | Description | Activated By |
+|--------|-------------|--------------|
+| `tasks` | Daily habit checklist (profile-specific) | All profiles |
+| `water` | Water intake tracking | All profiles |
+| `bowel` | Bowel movement journal + Bristol scale | constipation, gut_health, postpartum |
+| `meals` | Meal logging: sugar, carbs, calories | insulin_resistance, sugar_free, fat_burning |
+| `exercise` | Exercise/step tracking | fat_burning, general_wellness |
+| `body` | Weight, waist, blood glucose logging | insulin_resistance, fat_burning |
+| `mood` | Daily mood tracking | All profiles |
+| `food_guide` | Beneficial/harmful food lists (profile-specific) | All profiles |
+| `sleep` | Sleep duration and quality | general_wellness (future) |
+
+### Task Sets (loaded based on profile)
+```
+src/data/taskSets/
+├── breastfeeding_constipation.js   # Current 16 tasks (kept as-is)
+├── insulin_resistance.js           # Sugar-free meals, glucose checks, walks, etc.
+├── fat_burning.js                  # Calorie deficit, HIIT, protein meals, etc.
+├── general_wellness.js             # Balanced: water, exercise, vegetables, sleep
+├── sugar_free.js                   # Avoid sugar triggers, read labels, substitutes
+└── custom.js                       # User-built custom task set
+```
+
+Each task set has the same structure as current `defaultTasks.js`:
+```js
+export const insulinResistanceTasks = [
+  // Ertalab
+  { id: 'morning_water_ir', group: 'morning', text: '💧 Ochqoringa 1 stakan iliq suv iching' },
+  { id: 'no_sugar_breakfast', group: 'morning', text: '🥗 Shakarsiz nonushta (tuxum, sabzavot)' },
+  { id: 'glucose_check_am', group: 'morning', text: '🩸 Qon shakarini tekshiring (ixtiyoriy)' },
+  // Kun davomida
+  { id: 'walk_30min', group: 'day', text: '🚶 30 daqiqa piyoda yuring (ovqatdan keyin)' },
+  { id: 'no_sugar_snack', group: 'day', text: '🥜 Shakarsiz tamaddi (yong\'oq, sabzavot)' },
+  { id: 'water_between_meals', group: 'day', text: '💧 Ovqat oralig\'ida 2 stakan suv' },
+  { id: 'fiber_lunch', group: 'day', text: '🥦 Tolali tushlik (sabzavot, dukkaklilar)' },
+  // ... etc
+]
+```
+
+### Scoring Weights (per profile)
+| Profile | Tasks | Water | Bowel | Meals | Exercise | Body | Total |
+|---------|-------|-------|-------|-------|----------|------|-------|
+| Breastfeeding/Constipation | 70 | 20 | 10 | — | — | — | 100 |
+| Insulin Resistance | 25 | 15 | — | 30 | 20 | 10 | 100 |
+| Fat Burning | 20 | 15 | — | 25 | 30 | 10 | 100 |
+| Sugar-Free | 30 | 15 | — | 35 | 10 | 10 | 100 |
+| General Wellness | 35 | 20 | 5 | 15 | 20 | 5 | 100 |
+
+The `scoreCalculator.js` must read weights from the profile, not hardcode them.
+
+### Food Guide Sets (per profile)
+```
+src/data/foodGuides/
+├── constipation.js       # Current content (fiber, hydration foods)
+├── insulin_resistance.js # Low-GI foods, avoid refined carbs
+├── fat_burning.js        # High-protein, low-calorie, thermogenic foods
+├── sugar_free.js         # Natural alternatives, hidden sugar warnings
+└── general_wellness.js   # Balanced nutrition guide
+```
+
+### Alert Rules (per profile)
+| Profile | Alert Trigger | Warning | Danger |
+|---------|--------------|---------|--------|
+| Constipation | Days without bowel | 3 days → amber | 5+ days → red |
+| Insulin Resistance | Sugar intake streak | 3 sugar meals → amber | 5+ → red |
+| Fat Burning | Missed exercise streak | 3 days no exercise → amber | 5+ → red |
+| Sugar-Free | Sugar slip-ups per week | 3 slips → amber | 5+ → red |
+| General Wellness | Score below 40% streak | 3 days below 40 → amber | 5+ → red |
+
+### Navigation Adaptation
+The BottomNav 5 tabs adapt based on active modules:
+| Profile | Tab 1 | Tab 2 | Tab 3 | Tab 4 | Tab 5 |
+|---------|-------|-------|-------|-------|-------|
+| Constipation | Home | Tasks | Water | Bowel | Stats |
+| Insulin Resistance | Home | Tasks | Meals | Body | Stats |
+| Fat Burning | Home | Tasks | Exercise | Meals | Stats |
+| General Wellness | Home | Tasks | Water | Exercise | Stats |
+
+### New Daily Data Structure (extended)
+```js
+{
+  date: "2026-03-13",
+  profile: "insulin_resistance",  // which profile generated this day
+  tasks: { ... },                  // from active task set
+  water: { target: 8, consumed: 5, log: [] },
+  bowel: { ... },                  // if bowel module active
+  meals: {                         // NEW: if meals module active
+    entries: [
+      { time: "08:30", type: "breakfast", description: "Tuxum + sabzavot", sugar: false, calories: 350 },
+      { time: "13:00", type: "lunch", description: "Guruch + go'sht + salat", sugar: false, calories: 550 },
+    ],
+    totalCalories: 900,
+    sugarFreeStreak: true
+  },
+  exercise: {                      // NEW: if exercise module active
+    entries: [
+      { time: "07:00", type: "walk", duration: 30, calories: 150 },
+    ],
+    totalMinutes: 30,
+    totalCalories: 150
+  },
+  body: {                          // NEW: if body module active
+    weight: 78.5,
+    waist: null,
+    glucose: { fasting: 95, postMeal: null }
+  },
+  mood: "good",
+  score: 0,
+  custom_tasks: []
+}
+```
+
+### Files to Create for Profile System
+```
+src/
+├── data/
+│   ├── taskSets/
+│   │   ├── index.js                      # Exports getTaskSet(profileId)
+│   │   ├── breastfeedingConstipation.js   # Current 16 tasks
+│   │   ├── insulinResistance.js           # New task set
+│   │   ├── fatBurning.js                  # New task set
+│   │   ├── sugarFree.js                   # New task set
+│   │   └── generalWellness.js             # New task set
+│   ├── foodGuides/
+│   │   ├── index.js                      # Exports getFoodGuide(profileId)
+│   │   ├── constipation.js               # Current food guide
+│   │   ├── insulinResistance.js
+│   │   ├── fatBurning.js
+│   │   └── sugarFree.js
+│   ├── tipSets/
+│   │   ├── index.js                      # Exports getTips(profileId)
+│   │   ├── constipation.js               # Current tips
+│   │   ├── insulinResistance.js
+│   │   ├── fatBurning.js
+│   │   └── generalWellness.js
+│   ├── scoringProfiles.js                # Weights per profile type
+│   └── alertRules.js                     # Alert triggers per profile
+├── hooks/
+│   ├── useProfile.js                     # NEW: reads/writes health profile
+│   ├── useMeals.js                       # NEW: meal logging (if module active)
+│   ├── useExercise.js                    # NEW: exercise tracking (if module active)
+│   └── useBody.js                        # NEW: body metrics (if module active)
+├── components/
+│   ├── meals/                            # NEW module
+│   │   ├── MealLogForm.jsx
+│   │   ├── MealHistory.jsx
+│   │   └── SugarAlert.jsx
+│   ├── exercise/                         # NEW module
+│   │   ├── ExerciseLogForm.jsx
+│   │   ├── ExerciseHistory.jsx
+│   │   └── StepCounter.jsx
+│   └── body/                             # NEW module
+│       ├── WeightLog.jsx
+│       ├── GlucoseLog.jsx
+│       └── BodyTrends.jsx
+├── pages/
+│   ├── MealTracker.jsx                   # NEW page
+│   ├── ExerciseTracker.jsx               # NEW page
+│   └── BodyMetrics.jsx                   # NEW page
+```
 
 ### Priority Legend
-
 - 🟢 **MUST-HAVE** — Ship is incomplete without this. Build in Phase 1.
 - 🔵 **RECOMMENDED** — Significantly improves UX. Build in Phase 1-2.
 - 🟣 **PREMIUM** — Differentiator from competitors. Build in Phase 3-5.
 
 ---
 
-### 5.1 Onboarding & First Experience
+### 5.1 Onboarding & Health Profile Setup
 
 | # | Feature | Priority | Phase | Files |
 |---|---------|----------|-------|-------|
-| F1 | Personalized onboarding quiz (4 screens: name, baby info, goals, reminders) | 🟢 MUST | 1 | NEW: `pages/Onboarding.jsx`, `hooks/useOnboarding.js`, `components/onboarding/*` |
-| F2 | Instant value first screen — pre-populated dashboard after onboarding | 🟢 MUST | 1 | MODIFY: `pages/Dashboard.jsx` |
-| F3 | Zero-friction first action — guided first water log with celebration | 🔵 REC | 1 | MODIFY: `pages/WaterTracker.jsx` |
-| F4 | Onboarding skip + revisit from settings | 🔵 REC | 1 | MODIFY: `pages/Settings.jsx` |
+| F1 | Personalized onboarding quiz (5 screens: welcome, gender/age, goal selection, condition details, reminder preferences) — creates health profile that drives the entire app | 🟢 MUST | 1 | NEW: `pages/Onboarding.jsx`, `hooks/useOnboarding.js`, `hooks/useProfile.js`, 5 step components |
+| F2 | Profile-driven module activation — active modules, task set, food guide, tips, scoring weights all determined by profile | 🟢 MUST | 1 | NEW: `data/taskSets/*`, `data/foodGuides/*`, `data/tipSets/*`, `data/scoringProfiles.js` |
+| F3 | Adaptive BottomNav — 5 tabs change based on active modules (not hardcoded) | 🟢 MUST | 1 | MODIFY: `components/layout/BottomNav.jsx` |
+| F4 | Profile-driven scoring — scoreCalculator reads weights from profile, not hardcoded | 🟢 MUST | 1 | MODIFY: `utils/scoreCalculator.js` |
+| F5 | Profile editor in settings — change goals, switch profiles, adjust modules | 🔵 REC | 1 | MODIFY: `pages/Settings.jsx` |
+| F6 | Instant value first screen — pre-populated dashboard with profile-appropriate defaults | 🟢 MUST | 1 | MODIFY: `pages/Dashboard.jsx` |
 
 ### 5.2 Dashboard & Daily View
 
@@ -218,7 +409,18 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 | F23 | Bottom sheet for add task modal | 🔵 REC | 1 | MODIFY: `components/tasks/AddTaskModal.jsx` |
 | F24 | Visual Bristol scale selector — illustrations instead of text labels | 🔵 REC | 1 | MODIFY: `components/bowel/BowelLogForm.jsx` |
 
-### 5.5 Data Visualization & Insights
+### 5.5 New Tracking Modules (profile-activated)
+
+| # | Feature | Priority | Phase | Files |
+|---|---------|----------|-------|-------|
+| F25 | Meal tracker — log meals with sugar/carb/calorie tagging | 🟢 MUST | 1 | NEW: `pages/MealTracker.jsx`, `hooks/useMeals.js`, `components/meals/*` |
+| F26 | Sugar-free streak counter — consecutive sugar-free meals | 🟢 MUST | 1 | Inside `hooks/useMeals.js` |
+| F27 | Sugar/carb alert system — slip-up tracking with progressive warnings | 🟢 MUST | 1 | NEW: `components/meals/SugarAlert.jsx` |
+| F28 | Exercise tracker — log walks, workouts, duration, calories | 🟢 MUST | 1 | NEW: `pages/ExerciseTracker.jsx`, `hooks/useExercise.js`, `components/exercise/*` |
+| F29 | Body metrics — weight, waist, blood glucose logging with trend charts | 🔵 REC | 1 | NEW: `pages/BodyMetrics.jsx`, `hooks/useBody.js`, `components/body/*` |
+| F30 | Quick-log bottom sheets — meal log, exercise log as bottom sheets from dashboard | 🔵 REC | 1 | Reuse `BottomSheet.jsx` |
+
+### 5.6 Data Visualization & Insights
 
 | # | Feature | Priority | Phase | Files |
 |---|---------|----------|-------|-------|
@@ -307,7 +509,6 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 ## 6. Development Rules
 
 ### Code Style
-
 - Functional React with hooks only (no class components)
 - `export default function ComponentName()` pattern
 - Props destructured in function signature
@@ -317,7 +518,6 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 - PascalCase components, camelCase hooks/utils
 
 ### Performance
-
 - New pages: `React.lazy()` + `Suspense`
 - Heavy libs (recharts, framer-motion): lazy-loaded
 - Images: WebP, `loading="lazy"`
@@ -325,7 +525,6 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 - Target: <3s first contentful paint on 3G
 
 ### Accessibility
-
 - All interactive elements: `aria-label` or visible label
 - Color contrast: 4.5:1 minimum
 - Touch targets: 44x44px minimum
@@ -333,7 +532,6 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 - `prefers-reduced-motion` respected (already in index.css)
 
 ### Mobile-First
-
 - Design for 375px first, scale up
 - Bottom nav: max 5 items (currently: Home, Tasks, Water, Journal, Stats)
 - Cards: full-width mobile, grid desktop
@@ -344,34 +542,31 @@ These are the patterns that separate top-rated health apps from mediocre ones. A
 
 ## 7. Phased Implementation Roadmap
 
-### Phase 1: UX Polish & Gamification (2-3 weeks, frontend only)
-
-**Goal**: Make existing app feel modern and engaging. Ship and get feedback.
+### Phase 1: UX Polish, Profile System & Gamification (3-4 weeks, frontend only)
+**Goal**: Transform from single-persona app to multi-profile platform. Add gamification. Ship and get feedback.
 
 | Step | Features | New Files | Modified Files |
 |------|----------|-----------|----------------|
-| 1.1 Onboarding | F1, F2, F3, F4 | `pages/Onboarding.jsx`, `hooks/useOnboarding.js`, 4 step components | `App.jsx`, `Settings.jsx` |
-| 1.2 Gamification | F11, F12, F13, F15 | `hooks/useXP.js`, `hooks/useChallenges.js`, `data/challenges.js`, `components/shared/LevelProgress.jsx`, `components/stats/ChallengeList.jsx` | `data/achievements.js`, `hooks/useStreak.js`, `components/stats/AchievementBadges.jsx` |
-| 1.3 Animations | F14, F38, F39, F40 | — | `HealthScoreCard.jsx`, `TaskItem.jsx`, `GlassAnimation.jsx`, `ConfettiEffect.jsx`, `App.jsx` |
-| 1.4 Bottom Sheet | F22, F23 | `components/shared/BottomSheet.jsx` | `BowelLogForm.jsx`, `AddTaskModal.jsx` |
-| 1.5 Dashboard | F5, F6, F7, F9, F10 | `components/dashboard/StatPills.jsx`, `components/dashboard/WeeklySparkline.jsx` | `Dashboard.jsx`, `HealthScoreCard.jsx`, `useSmartTips.js` |
-| 1.6 Task UX | F18, F19, F20, F21 | — | `Tasks.jsx`, `TaskItem.jsx`, `Toast.jsx` |
-| 1.7 Polish | F37, F43, F44, F45 | `components/shared/EmptyState.jsx`, `i18n/uz.json`, `i18n/ru.json`, `hooks/useTranslation.js` | `Settings.jsx`, accessibility audit |
+| **1.0 Profile System** | F1-F6 | `hooks/useProfile.js`, `data/taskSets/*` (5 files), `data/foodGuides/*` (5 files), `data/tipSets/*` (4 files), `data/scoringProfiles.js`, `data/alertRules.js` | `utils/scoreCalculator.js`, `components/layout/BottomNav.jsx`, `hooks/useDaily.js` (extend data model), `hooks/useSmartTips.js`, `utils/tipEngine.js`, `pages/Dashboard.jsx`, `pages/Settings.jsx`, `vite.config.js` (PWA description) |
+| **1.0b New Modules** | F25-F30 | `pages/MealTracker.jsx`, `pages/ExerciseTracker.jsx`, `pages/BodyMetrics.jsx`, `hooks/useMeals.js`, `hooks/useExercise.js`, `hooks/useBody.js`, `components/meals/*`, `components/exercise/*`, `components/body/*` | `App.jsx` (new routes) |
+| 1.1 Onboarding | F1 quiz screens | `pages/Onboarding.jsx`, `hooks/useOnboarding.js`, 5 step components | `App.jsx` |
+| 1.2 Gamification | F11-F15 | `hooks/useXP.js`, `hooks/useChallenges.js`, `data/challenges.js`, `components/shared/LevelProgress.jsx`, `components/stats/ChallengeList.jsx` | `data/achievements.js`, `hooks/useStreak.js`, `components/stats/AchievementBadges.jsx` |
+| 1.3 Animations | F14, F38-F40 | — | `HealthScoreCard.jsx`, `TaskItem.jsx`, `GlassAnimation.jsx`, `ConfettiEffect.jsx`, `App.jsx` |
+| 1.4 Bottom Sheet | F22, F23, F30 | `components/shared/BottomSheet.jsx` | `BowelLogForm.jsx`, `AddTaskModal.jsx` |
+| 1.5 Dashboard | F7-F10 | `components/dashboard/StatPills.jsx`, `components/dashboard/WeeklySparkline.jsx` | `Dashboard.jsx`, `HealthScoreCard.jsx` |
+| 1.6 Task UX | F18-F21 | — | `Tasks.jsx`, `TaskItem.jsx`, `Toast.jsx` |
+| 1.7 Polish | F37, F43-F45 | `components/shared/EmptyState.jsx`, `i18n/uz.json`, `i18n/ru.json`, `hooks/useTranslation.js` | `Settings.jsx`, all components (a11y) |
 
 ### Phase 2: Backend & Auth (2-3 weeks)
-
 F46-F51 + database schema + API endpoints
 
 ### Phase 3: Telegram Bot (1-2 weeks)
-
 F52-F58 + grammY server + BullMQ reminders
 
 ### Phase 4: Doctor & Admin (1-2 weeks)
-
 F59-F64 + F68 + admin panel + doctor views
 
 ### Phase 5: Intelligence (1 week)
-
 F65-F67 + AI integration + correlation engine
 
 **Total: 7-11 weeks to full platform.**
@@ -416,6 +611,28 @@ F65-F67 + AI integration + correlation engine
 | Bowel movement | Ich kelishi |
 | Constipation | Ich qotishi |
 | Consult a doctor | Shifokorga murojaat qiling |
+| Insulin resistance | Insulin qarshilik |
+| Blood sugar / Glucose | Qon shakari / Glyukoza |
+| Sugar-free | Shakarsiz |
+| Fat burning | Yog' yoqish |
+| Calories | Kaloriya |
+| Exercise / Workout | Mashq / Jismoniy mashq |
+| Weight | Vazn |
+| Waist | Bel |
+| Meal / Food | Ovqat / Taom |
+| Breakfast / Lunch / Dinner | Nonushta / Tushlik / Kechki ovqat |
+| Snack | Tamaddi |
+| Steps | Qadamlar |
+| Duration | Davomiylik |
+| Carbohydrates | Uglevodlar |
+| Protein | Oqsil |
+| Fiber | Tola |
+| Fasting glucose | Och qoringa glyukoza |
+| Health profile | Salomatlik profili |
+| Select your goal | Maqsadingizni tanlang |
+| General wellness | Umumiy salomatlik |
+| Postpartum recovery | Tug'ruqdan keyingi tiklanish |
+| Gut health | Ichak salomatligi |
 
 ---
 

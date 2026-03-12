@@ -1,34 +1,19 @@
-import { useStorage } from './useStorage'
-
-const STORAGE_KEY = 'healthtracker_onboarding'
-
-const DEFAULT_PROFILE = {
-  completed: false,
-  name: '',
-  babyAgeGroup: null,
-  isBreastfeeding: null,
-  goals: [],
-  remindersEnabled: true,
-}
+import { useProfile } from './useProfile'
 
 export function useOnboarding() {
-  const [profile, setProfile] = useStorage(STORAGE_KEY, DEFAULT_PROFILE)
+  const { profile, hasProfile, initProfile, updateProfile, resetProfile } = useProfile()
 
-  const updateProfile = (partial) => {
-    setProfile(prev => ({ ...prev, ...partial }))
-  }
-
-  const completeOnboarding = () => {
-    setProfile(prev => ({ ...prev, completed: true }))
+  const completeOnboarding = (data) => {
+    initProfile(data)
   }
 
   const resetOnboarding = () => {
-    setProfile(DEFAULT_PROFILE)
+    resetProfile()
   }
 
   return {
     profile,
-    isCompleted: profile.completed,
+    isCompleted: hasProfile,
     updateProfile,
     completeOnboarding,
     resetOnboarding,

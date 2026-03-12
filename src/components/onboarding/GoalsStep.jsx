@@ -1,15 +1,14 @@
 import { useState } from 'react'
-import { ShieldCheck, Droplets, Salad, Footprints } from 'lucide-react'
+import { ShieldCheck, Activity, Flame, Heart, Droplets, HeartPulse, Baby } from 'lucide-react'
+import { GOAL_OPTIONS } from '../../data/scoringProfiles'
 
-const GOALS = [
-  { id: 'constipation', icon: ShieldCheck, label: 'Ich qotishini oldini olish', color: 'var(--color-success)' },
-  { id: 'water', icon: Droplets, label: 'Suv ichish odatini shakllantirish', color: 'var(--color-water)' },
-  { id: 'nutrition', icon: Salad, label: "Sog'lom ovqatlanish", color: 'var(--color-warning)' },
-  { id: 'activity', icon: Footprints, label: 'Harakatli bo\'lish', color: 'var(--color-accent)' },
-]
+const ICON_MAP = {
+  ShieldCheck, Activity, Flame, Heart, Droplets, HeartPulse, Baby,
+  CandyOff: ShieldCheck, // fallback — CandyOff may not exist in all lucide versions
+}
 
 export default function GoalsStep({ goals: initialGoals, onNext }) {
-  const [selected, setSelected] = useState(initialGoals?.length ? initialGoals : ['constipation'])
+  const [selected, setSelected] = useState(initialGoals?.length ? initialGoals : [])
 
   const toggle = (id) => {
     setSelected(prev =>
@@ -27,8 +26,8 @@ export default function GoalsStep({ goals: initialGoals, onNext }) {
       </p>
 
       <div className="space-y-2.5 mb-6">
-        {GOALS.map(goal => {
-          const Icon = goal.icon
+        {GOAL_OPTIONS.map(goal => {
+          const Icon = ICON_MAP[goal.icon] || Heart
           const active = selected.includes(goal.id)
           return (
             <button
@@ -42,9 +41,9 @@ export default function GoalsStep({ goals: initialGoals, onNext }) {
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: active ? goal.color : 'var(--color-divider)', opacity: active ? 0.15 : 1 }}
+                style={{ backgroundColor: `${goal.color}18` }}
               >
-                <Icon size={20} style={{ color: active ? goal.color : 'var(--color-text-tertiary)' }} />
+                <Icon size={20} style={{ color: goal.color }} />
               </div>
               <span className={`text-sm font-medium ${active ? 'text-primary' : ''}`}>
                 {goal.label}

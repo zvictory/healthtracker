@@ -33,6 +33,7 @@ export default function Settings() {
     localStorage.removeItem('healthtracker_reminders')
     localStorage.removeItem('healthtracker_darkmode')
     localStorage.removeItem('healthtracker_onboarding')
+    localStorage.removeItem('healthtracker_profile')
     window.location.reload()
   }
 

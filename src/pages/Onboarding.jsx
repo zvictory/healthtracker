@@ -1,36 +1,48 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useOnboarding } from '../hooks/useOnboarding'
 import WelcomeStep from '../components/onboarding/WelcomeStep'
-import BabyInfoStep from '../components/onboarding/BabyInfoStep'
+import ProfileStep from '../components/onboarding/ProfileStep'
 import GoalsStep from '../components/onboarding/GoalsStep'
+import ConditionsStep from '../components/onboarding/ConditionsStep'
 import RemindersStep from '../components/onboarding/RemindersStep'
 
-const TOTAL_STEPS = 4
+const TOTAL_STEPS = 5
 
 export default function Onboarding() {
-  const { profile, updateProfile, completeOnboarding } = useOnboarding()
+  const { completeOnboarding } = useOnboarding()
   const [step, setStep] = useState(1)
   const navigate = useNavigate()
+  const data = useRef({ name: '', gender: null, age: null, goals: [], conditions: [] })
 
   const handleWelcome = (name) => {
-    updateProfile({ name })
+    data.current.name = name
     setStep(2)
   }
 
-  const handleBabyInfo = (babyAgeGroup, isBreastfeeding) => {
-    updateProfile({ babyAgeGroup, isBreastfeeding })
+  const handleProfile = (gender, age) => {
+    data.current.gender = gender
+    data.current.age = age
     setStep(3)
   }
 
   const handleGoals = (goals) => {
-    updateProfile({ goals })
+    data.current.goals = goals
     setStep(4)
   }
 
+  const handleConditions = (conditions) => {
+    data.current.conditions = conditions
+    setStep(5)
+  }
+
   const handleFinish = (remindersEnabled) => {
-    updateProfile({ remindersEnabled })
-    completeOnboarding()
+    completeOnboarding({ ...data.current, remindersEnabled })
+    navigate('/', { replace: true })
+  }
+
+  const skip = () => {
+    completeOnboarding({ ...data.current })
     navigate('/', { replace: true })
   }
 
@@ -56,10 +68,7 @@ export default function Onboarding() {
       {step < TOTAL_STEPS && (
         <div className="flex justify-end px-6 pt-2">
           <button
-            onClick={() => {
-              completeOnboarding()
-              navigate('/', { replace: true })
-            }}
+            onClick={skip}
             className="text-xs text-[var(--color-text-tertiary)] font-medium cursor-pointer hover:text-[var(--color-text-secondary)] transition-colors"
           >
             O'tkazib yuborish
@@ -70,22 +79,11 @@ export default function Onboarding() {
       {/* Step content */}
       <div className="flex-1 flex items-start justify-center px-6 pt-8 pb-12">
         <div className="w-full max-w-sm" key={step}>
-          {step === 1 && (
-            <WelcomeStep name={profile.name} onNext={handleWelcome} />
-          )}
-          {step === 2 && (
-            <BabyInfoStep
-              babyAgeGroup={profile.babyAgeGroup}
-              isBreastfeeding={profile.isBreastfeeding}
-              onNext={handleBabyInfo}
-            />
-          )}
-          {step === 3 && (
-            <GoalsStep goals={profile.goals} onNext={handleGoals} />
-          )}
-          {step === 4 && (
-            <RemindersStep onFinish={handleFinish} />
-          )}
+          {step === 1 && <WelcomeStep name="" onNext={handleWelcome} />}
+          {step === 2 && <ProfileStep onNext={handleProfile} />}
+          {step === 3 && <GoalsStep goals={[]} onNext={handleGoals} />}
+          {step === 4 && <ConditionsStep onNext={handleConditions} />}
+          {step === 5 && <RemindersStep onFinish={handleFinish} />}
         </div>
       </div>
     </div>
