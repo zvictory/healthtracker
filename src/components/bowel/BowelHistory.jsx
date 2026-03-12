@@ -1,5 +1,7 @@
+import { ClipboardList } from 'lucide-react'
 import { BRISTOL_SCALE } from '../../utils/constants'
 import { formatDateShort } from '../../utils/dateUtils'
+import EmptyState from '../shared/EmptyState'
 
 const BRISTOL_COLORS = {
   hard: '#92400E',
@@ -13,9 +15,11 @@ export default function BowelHistory({ history }) {
 
   if (bowelDays.length === 0) {
     return (
-      <div className="text-center py-8 text-[var(--color-text-secondary)] text-sm">
-        Hozircha qaydlar yo'q
-      </div>
+      <EmptyState
+        icon={ClipboardList}
+        title="Hozircha qaydlar yo'q"
+        description="Birinchi qaydni qo'shish uchun yuqoridagi tugmani bosing"
+      />
     )
   }
 

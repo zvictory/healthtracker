@@ -16,7 +16,7 @@ const secondaryNav = [
 
 function SidebarLink({ path, icon: Icon, label }) {
   return (
-    <NavLink to={path} end={path === '/'} className="block">
+    <NavLink to={path} end={path === '/'} className="block" aria-label={label}>
       {({ isActive }) => (
         <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 cursor-pointer ${
           isActive
@@ -50,7 +50,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto" aria-label="Asosiy navigatsiya">
         <p className="px-3 mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--color-text-tertiary)]">Asosiy</p>
         {mainNav.map(item => (
           <SidebarLink key={item.path} {...item} />

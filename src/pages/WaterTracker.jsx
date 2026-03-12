@@ -53,6 +53,7 @@ export default function WaterTracker() {
           <button
             onClick={removeGlass}
             disabled={consumed <= 0}
+            aria-label="Stakan olib tashlash"
             className="w-12 h-12 rounded-xl bg-[var(--color-bg-elevated)] border border-[var(--color-border)] flex items-center justify-center disabled:opacity-30 active:scale-95 transition-transform cursor-pointer"
           >
             <Minus size={20} />
@@ -60,6 +61,7 @@ export default function WaterTracker() {
 
           <button
             onClick={handleAdd}
+            aria-label="Stakan qo'shish"
             className="w-16 h-16 rounded-2xl bg-[var(--color-water)] text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform cursor-pointer"
           >
             <Plus size={28} />

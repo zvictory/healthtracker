@@ -11,7 +11,7 @@ const tabs = [
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Asosiy navigatsiya">
       <div className="bg-[var(--color-bg-elevated)] border-t border-[var(--color-divider)]">
         <div className="max-w-[640px] mx-auto flex justify-around items-center h-16 px-2">
           {tabs.map(({ path, icon: Icon, label }) => (
@@ -20,6 +20,7 @@ export default function BottomNav() {
               to={path}
               end={path === '/'}
               className="block"
+              aria-label={label}
             >
               {({ isActive }) => (
                 <div className={`relative flex flex-col items-center justify-center gap-0.5 w-16 h-12 rounded-xl text-[10px] font-medium transition-colors duration-200 cursor-pointer ${
