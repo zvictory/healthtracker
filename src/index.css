@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Primary — Warm Teal */
+  --color-primary: #0D9488;
+  --color-primary-light: #CCFBF1;
+  --color-primary-dark: #0F766E;
+  --color-primary-50: #F0FDFA;
+
+  /* Success — Emerald */
+  --color-success: #10B981;
+  --color-success-light: #D1FAE5;
+  --color-success-dark: #059669;
+
+  /* Water — Blue */
+  --color-water: #3B82F6;
+  --color-water-light: #DBEAFE;
+
+  /* Warning — Amber */
+  --color-warning: #F59E0B;
+  --color-warning-light: #FEF3C7;
+
+  /* Danger — Red */
+  --color-danger: #EF4444;
+  --color-danger-light: #FEE2E2;
+
+  /* Accent — Violet */
+  --color-accent: #8B5CF6;
+  --color-accent-light: #EDE9FE;
+
+  /* Surfaces */
+  --color-bg: #F8FAFB;
+  --color-bg-elevated: #FFFFFF;
+  --color-card: #FFFFFF;
+  --color-card-hover: #F3F4F6;
+
+  /* Text */
+  --color-text: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+
+  /* Borders & Dividers */
+  --color-border: #E5E7EB;
+  --color-divider: #F3F4F6;
+
+  /* Shadows — Rich, multi-layered */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.04), 0 6px 16px -2px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 8px -1px rgb(0 0 0 / 0.06), 0 12px 28px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 8px 20px -2px rgb(0 0 0 / 0.08), 0 20px 48px -8px rgb(0 0 0 / 0.12);
+
+  /* Legacy aliases */
+  --color-green-primary: #10B981;
+  --color-green-light: #D1FAE5;
+  --color-green-dark: #059669;
+  --color-blue-primary: #3B82F6;
+  --color-blue-light: #DBEAFE;
+  --color-yellow-primary: #F59E0B;
+  --color-yellow-light: #FEF3C7;
+  --color-pink-primary: #EC4899;
+  --color-pink-light: #FCE7F3;
+  --color-red-primary: #EF4444;
+  --color-red-light: #FEE2E2;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark mode */
+.dark {
+  --color-bg: #0F172A;
+  --color-bg-elevated: #1E293B;
+  --color-card: #1E293B;
+  --color-card-hover: #334155;
+  --color-text: #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-text-tertiary: #64748B;
+  --color-border: #334155;
+  --color-divider: #1E293B;
+  --color-primary-light: #134E4A;
+  --color-success-light: #064E3B;
+  --color-water-light: #1E3A5F;
+  --color-warning-light: #451A03;
+  --color-danger-light: #450A0A;
+  --color-accent-light: #2E1065;
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.3), 0 4px 12px -2px rgb(0 0 0 / 0.2);
+  --shadow-md: 0 4px 8px rgb(0 0 0 / 0.3), 0 12px 28px -4px rgb(0 0 0 / 0.25);
+  color-scheme: dark;
+}
+
+/* Card system — in components layer so utilities can override */
+@layer components {
+  .card {
+    background: var(--color-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .card-hover:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes flame {
+  0%, 100% { transform: scaleY(1) scaleX(1); }
+  50% { transform: scaleY(1.15) scaleX(0.92); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-primary);
+  color: white;
+}
