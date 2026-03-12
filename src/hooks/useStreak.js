@@ -5,15 +5,37 @@ import { achievements } from '../data/achievements'
 export function useStreak() {
   const { getHistoricalData } = useDaily()
 
-  const historicalData = getHistoricalData(30)
+  const historicalData = useMemo(() => getHistoricalData(30), [getHistoricalData])
 
-  const currentStreak = useMemo(() => {
+  // Streak with shield: allows 1 miss per 7-day window
+  const { currentStreak, shieldUsed, shieldAvailable } = useMemo(() => {
     let streak = 0
+    let shieldUsedInWindow = false
+    let missesInWindow = 0
+
     for (const day of historicalData) {
-      if (day.score >= 70) streak++
-      else break
+      if (day.score >= 70) {
+        streak++
+      } else if (!shieldUsedInWindow) {
+        // Use shield — streak survives this miss
+        shieldUsedInWindow = true
+        missesInWindow++
+        streak++
+      } else {
+        break
+      }
+      // Reset shield every 7 days
+      if (streak % 7 === 0) {
+        shieldUsedInWindow = false
+        missesInWindow = 0
+      }
     }
-    return streak
+
+    return {
+      currentStreak: streak,
+      shieldUsed: shieldUsedInWindow,
+      shieldAvailable: !shieldUsedInWindow,
+    }
   }, [historicalData])
 
   const earnedAchievements = useMemo(() => {
@@ -36,5 +58,5 @@ export function useStreak() {
     return { avgScore, totalWater, bowelDays, completedTasks }
   }, [historicalData])
 
-  return { currentStreak, earnedAchievements, weeklySummary, historicalData }
+  return { currentStreak, shieldUsed, shieldAvailable, earnedAchievements, weeklySummary, historicalData }
 }

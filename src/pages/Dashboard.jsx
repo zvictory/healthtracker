@@ -5,11 +5,13 @@ import { useScore } from '../hooks/useScore'
 import { useStreak } from '../hooks/useStreak'
 import { useBowel } from '../hooks/useBowel'
 import { useOnboarding } from '../hooks/useOnboarding'
+import { useXP } from '../hooks/useXP'
 import HealthScoreCard from '../components/dashboard/HealthScoreCard'
 import QuickStats from '../components/dashboard/QuickStats'
 import MoodSelector from '../components/dashboard/MoodSelector'
 import SmartTips from '../components/dashboard/SmartTips'
 import StreakCounter from '../components/dashboard/StreakCounter'
+import LevelProgress from '../components/shared/LevelProgress'
 import BowelAlert from '../components/bowel/BowelAlert'
 
 const getGreeting = () => {
@@ -22,9 +24,10 @@ const getGreeting = () => {
 export default function Dashboard() {
   const { todayData, updateTodayData } = useDaily()
   const score = useScore()
-  const { currentStreak } = useStreak()
+  const { currentStreak, shieldAvailable } = useStreak()
   const { daysSinceLast, alertLevel } = useBowel()
   const { profile } = useOnboarding()
+  const xp = useXP()
 
   return (
     <div className="min-h-screen">
@@ -60,7 +63,8 @@ export default function Dashboard() {
               <HealthScoreCard score={score} />
               <div className="space-y-4">
                 <QuickStats todayData={todayData} daysSinceLast={daysSinceLast} />
-                {currentStreak > 0 && <StreakCounter streak={currentStreak} />}
+                {currentStreak > 0 && <StreakCounter streak={currentStreak} shieldAvailable={shieldAvailable} />}
+                <LevelProgress {...xp} />
               </div>
             </div>
           </div>
