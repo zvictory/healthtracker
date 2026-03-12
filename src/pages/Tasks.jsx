@@ -50,10 +50,16 @@ export default function Tasks() {
   const totalCount = allTasks.length
   const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0
 
+  const timeOrder = ['morning', 'day', 'evening', 'extra']
+  const currentIdx = timeOrder.indexOf(currentTimeOfDay)
+
   const [openGroups, setOpenGroups] = useState(() => {
     const initial = {}
     Object.keys(TASK_GROUPS).forEach(key => {
-      initial[key] = key === currentTimeOfDay
+      const idx = timeOrder.indexOf(key)
+      // Auto-open current group, collapse past groups (unless it's extra)
+      initial[key] = key === currentTimeOfDay || (key === 'extra')
+      if (idx < currentIdx && key !== 'extra') initial[key] = false
     })
     return initial
   })
@@ -111,6 +117,8 @@ export default function Tasks() {
           const groupCompleted = groupTasks.filter(t => tasks[t.id]?.done).length
           const GroupIcon = GROUP_ICONS[key]
 
+          const groupProgress = groupTasks.length > 0 ? groupCompleted / groupTasks.length : 0
+
           return (
             <div key={key} className="card overflow-hidden">
               <button
@@ -129,6 +137,14 @@ export default function Tasks() {
                   <ChevronDown size={14} className={`text-[var(--color-text-tertiary)] transition-transform ${openGroups[key] ? 'rotate-180' : ''}`} />
                 </div>
               </button>
+
+              {/* Per-group progress bar */}
+              <div className="h-1 bg-[var(--color-divider)]">
+                <div
+                  className="h-full bg-primary transition-all duration-300"
+                  style={{ width: `${groupProgress * 100}%` }}
+                />
+              </div>
 
               {openGroups[key] && (
                 <div className="border-t border-[var(--color-divider)]">
