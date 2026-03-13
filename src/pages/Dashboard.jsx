@@ -28,6 +28,8 @@ export default function Dashboard() {
   const { daysSinceLast, alertLevel } = useBowel()
   const { profile } = useOnboarding()
   const xp = useXP()
+  const hasBowelModule = profile.activeModules?.includes('bowel')
+  const foodGuideLabel = hasBowelModule ? 'Foydali mahsulotlar' : 'Ovqat tavsiyalari'
 
   return (
     <div className="min-h-screen">
@@ -49,7 +51,7 @@ export default function Dashboard() {
 
       <div className="px-4 lg:px-6 pb-8">
         {/* Alert */}
-        {alertLevel !== 'normal' && (
+        {hasBowelModule && alertLevel !== 'normal' && (
           <div className="mb-4">
             <BowelAlert daysSinceLast={daysSinceLast} alertLevel={alertLevel} />
           </div>
@@ -62,7 +64,11 @@ export default function Dashboard() {
             <div className="lg:grid lg:grid-cols-2 lg:gap-4 space-y-4 lg:space-y-0">
               <HealthScoreCard score={score} />
               <div className="space-y-4">
-                <QuickStats todayData={todayData} daysSinceLast={daysSinceLast} />
+                <QuickStats
+                  todayData={todayData}
+                  daysSinceLast={daysSinceLast}
+                  hasBowelModule={hasBowelModule}
+                />
                 {currentStreak > 0 && <StreakCounter streak={currentStreak} shieldAvailable={shieldAvailable} />}
                 <LevelProgress {...xp} />
               </div>
@@ -81,7 +87,7 @@ export default function Dashboard() {
               className="card card-hover block p-5 cursor-pointer group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-primary">Foydali mahsulotlar</span>
+                <span className="text-sm font-semibold text-primary">{foodGuideLabel}</span>
                 <ArrowRight size={16} className="text-primary transition-transform group-hover:translate-x-1" />
               </div>
             </Link>

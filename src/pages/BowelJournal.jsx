@@ -24,7 +24,7 @@ export default function BowelJournal() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
+    <div>
       <PageHeader title="Ich Kelish Jurnali" subtitle="Kundalik qaydlar" />
 
       <div className="px-4 space-y-4 pb-6">
@@ -46,7 +46,7 @@ export default function BowelJournal() {
         {/* Log button */}
         <button
           onClick={() => setShowForm(true)}
-          className="w-full py-4 rounded-xl bg-primary text-white font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform cursor-pointer"
+          className="w-full py-4 rounded-2xl bg-primary text-white font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform cursor-pointer shadow-sm"
         >
           <Plus size={20} />
           Qayd qilish

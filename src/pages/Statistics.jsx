@@ -20,19 +20,19 @@ export default function Statistics() {
   const { earnedAchievements, weeklySummary, historicalData } = useStreak()
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
+    <div>
       <PageHeader title="Statistika" subtitle="Natijalaringizni kuzating" />
 
       <div className="px-4">
-        <div className="card flex p-1 mb-4">
+        <div className="card flex p-1.5 mb-4">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+              className={`flex-1 py-2.5 rounded-2xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
                 activeTab === tab.id
-                  ? 'bg-primary text-white'
-                  : 'text-[var(--color-text-secondary)]'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
               }`}
             >
               {tab.label}

@@ -38,19 +38,21 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
+    <div>
       <PageHeader title="Sozlamalar" />
 
-      <div className="px-4 lg:px-6 space-y-4 pb-8">
+      <div className="px-4 lg:px-6 space-y-3 pb-8">
         {/* Notifications */}
-        <div className="card p-4">
+        <div className="card p-5">
           <button
             onClick={() => setShowReminders(!showReminders)}
             className="w-full flex items-center gap-3"
           >
-            <Bell size={20} className="text-[var(--color-warning)]" />
+            <div className="w-10 h-10 rounded-2xl bg-[var(--color-warning-light)] flex items-center justify-center flex-shrink-0">
+              <Bell size={18} className="text-[var(--color-warning)]" />
+            </div>
             <span className="text-sm font-semibold flex-1 text-left">Bildirishnomalar</span>
-            <ChevronDown size={14} className={`text-[var(--color-text-tertiary)] transition-transform ${showReminders ? 'rotate-180' : ''}`} />
+            <ChevronDown size={14} className={`text-[var(--color-text-tertiary)] transition-transform duration-200 ${showReminders ? 'rotate-180' : ''}`} />
           </button>
 
           {showReminders && (
@@ -69,21 +71,23 @@ export default function Settings() {
         </div>
 
         {/* Water target */}
-        <div className="card p-4">
+        <div className="card p-5">
           <div className="flex items-center gap-3">
-            <Droplets size={20} className="text-[var(--color-water)]" />
+            <div className="w-10 h-10 rounded-2xl bg-[var(--color-water-light)] flex items-center justify-center flex-shrink-0">
+              <Droplets size={18} className="text-[var(--color-water)]" />
+            </div>
             <span className="text-sm font-semibold flex-1">Suv maqsadi</span>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => adjustWaterTarget(-1)}
-                className="w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[var(--color-border)] flex items-center justify-center text-lg font-bold"
+                className="w-9 h-9 rounded-xl bg-[var(--color-divider)] flex items-center justify-center text-lg font-bold cursor-pointer active:scale-95 transition-transform"
               >
                 −
               </button>
               <span className="text-lg font-bold w-6 text-center">{waterTarget}</span>
               <button
                 onClick={() => adjustWaterTarget(1)}
-                className="w-8 h-8 rounded-full bg-[var(--color-bg)] border border-[var(--color-border)] flex items-center justify-center text-lg font-bold"
+                className="w-9 h-9 rounded-xl bg-[var(--color-divider)] flex items-center justify-center text-lg font-bold cursor-pointer active:scale-95 transition-transform"
               >
                 +
               </button>
@@ -92,9 +96,11 @@ export default function Settings() {
         </div>
 
         {/* Dark mode */}
-        <div className="card p-4">
+        <div className="card p-5">
           <div className="flex items-center gap-3">
-            <Moon size={20} className="text-[var(--color-water)]" />
+            <div className="w-10 h-10 rounded-2xl bg-[var(--color-water-light)] flex items-center justify-center flex-shrink-0">
+              <Moon size={18} className="text-[var(--color-water)]" />
+            </div>
             <span className="text-sm font-semibold flex-1">Qorong'i rejim</span>
           </div>
           <DarkModeToggle mode={mode} onChange={setDarkMode} />
@@ -103,36 +109,44 @@ export default function Settings() {
         {/* Food guide link */}
         <Link
           to="/food-guide"
-          className="card p-4 flex items-center gap-3"
+          className="card card-hover p-5 flex items-center gap-3"
         >
-          <Apple size={20} className="text-[var(--color-success)]" />
+          <div className="w-10 h-10 rounded-2xl bg-[var(--color-success-light)] flex items-center justify-center flex-shrink-0">
+            <Apple size={18} className="text-[var(--color-success)]" />
+          </div>
           <span className="text-sm font-semibold flex-1">Foydali mahsulotlar ro'yxati</span>
-          <span className="text-xs">→</span>
+          <span className="text-xs text-[var(--color-text-tertiary)]">→</span>
         </Link>
 
         {/* Restart onboarding */}
         <button
           onClick={() => { resetOnboarding(); navigate('/onboarding') }}
-          className="w-full card p-4 flex items-center gap-3 cursor-pointer"
+          className="w-full card card-hover p-5 flex items-center gap-3 cursor-pointer"
         >
-          <RotateCcw size={20} className="text-[var(--color-text-secondary)]" />
+          <div className="w-10 h-10 rounded-2xl bg-[var(--color-divider)] flex items-center justify-center flex-shrink-0">
+            <RotateCcw size={18} className="text-[var(--color-text-secondary)]" />
+          </div>
           <span className="text-sm font-semibold">Qayta tanishtiruv</span>
         </button>
 
         {/* Clear data */}
         <button
           onClick={() => setShowClearConfirm(true)}
-          className="w-full card p-4 flex items-center gap-3 cursor-pointer"
+          className="w-full card p-5 flex items-center gap-3 cursor-pointer"
         >
-          <Trash2 size={20} className="text-[var(--color-danger)]" />
+          <div className="w-10 h-10 rounded-2xl bg-[var(--color-danger-light)] flex items-center justify-center flex-shrink-0">
+            <Trash2 size={18} className="text-[var(--color-danger)]" />
+          </div>
           <span className="text-sm font-semibold text-[var(--color-danger)]">Ma'lumotlarni tozalash</span>
         </button>
 
         {/* Disclaimer - hidden on desktop since it's in sidebar */}
-        <div className="card p-4 lg:hidden">
+        <div className="card p-5 lg:hidden">
           <div className="flex items-start gap-3">
-            <Info size={20} className="text-[var(--color-text-secondary)] flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-[var(--color-text-secondary)]">
+            <div className="w-10 h-10 rounded-2xl bg-[var(--color-divider)] flex items-center justify-center flex-shrink-0">
+              <Info size={16} className="text-[var(--color-text-tertiary)]" />
+            </div>
+            <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
               Bu ilova tibbiy maslahat bermaydi. Faqat kundalik odatlarni kuzatish uchun mo'ljallangan.
               Muammo davom etsa, shifokorga murojaat qiling.
               Barcha ma'lumot faqat telefoningizda saqlanadi — maxfiylik to'liq ta'minlanadi.

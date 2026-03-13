@@ -5,7 +5,7 @@ export default function LevelProgress({ level, levelName, xpInLevel, xpToNext, p
     <div className="card p-4">
       <div className="flex items-center gap-3">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+          className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
           style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)' }}
         >
           <Zap size={18} className="text-white" />

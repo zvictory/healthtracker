@@ -43,24 +43,58 @@ export default function HealthScoreCard({ score }) {
     return 'Boshlaymiz!'
   }
 
+  const getSummary = () => {
+    if (score >= 70) return 'Bugungi ritmingiz yaxshi. Shu tempni ushlab turing.'
+    if (score >= 40) return 'Kun yaxshi ketmoqda. Bir nechta odat bilan ball tez ko`tariladi.'
+    return 'Eng oson qadamdan boshlang: suv, vazifa yoki kayfiyatni belgilang.'
+  }
+
   return (
-    <div className="card p-6 flex flex-col items-center justify-center">
-      <ProgressRing
-        progress={score}
-        size={180}
-        strokeWidth={12}
-        color={getColor()}
-        bgColor={getBgColor()}
-        gradientColors={getGradient()}
-      >
-        <div className="text-center">
-          <div className="text-5xl font-extrabold tracking-tight" style={{ color: getColor(), animation: 'count-up 0.5s ease-out' }}>
-            {displayScore}
-          </div>
-          <div className="text-xs font-medium text-[var(--color-text-tertiary)] mt-1">{getLabel()}</div>
+    <div className="card relative overflow-hidden p-6 lg:p-7">
+      <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      <div className="absolute -right-10 top-0 h-36 w-36 rounded-full blur-3xl" style={{ background: `${getColor()}22` }} />
+
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">Bugungi ball</p>
+          <h2 className="mt-2 text-2xl font-extrabold tracking-[-0.03em] text-[var(--color-text)]">{getLabel()}</h2>
         </div>
-      </ProgressRing>
-      <p className="text-xs text-[var(--color-text-tertiary)] mt-5 font-medium">Bugungi sog'liq balli</p>
+        <div className="rounded-full px-3 py-1.5 text-xs font-semibold" style={{ color: getColor(), background: getBgColor() }}>
+          {score}/100
+        </div>
+      </div>
+
+      <div className="mt-6 flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <ProgressRing
+          progress={score}
+          size={190}
+          strokeWidth={14}
+          color={getColor()}
+          bgColor={getBgColor()}
+          gradientColors={getGradient()}
+        >
+          <div className="text-center">
+            <div className="text-5xl font-extrabold tracking-tight" style={{ color: getColor(), animation: 'count-up 0.5s ease-out' }}>
+              {displayScore}
+            </div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-text-tertiary)] mt-1">Sog'liq indeksi</div>
+          </div>
+        </ProgressRing>
+
+        <div className="w-full max-w-[260px] space-y-4 lg:pr-2">
+          <p className="text-sm leading-6 text-[var(--color-text-secondary)]">{getSummary()}</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-[var(--color-divider)] p-3">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">Holat</p>
+              <p className="mt-1 text-sm font-bold text-[var(--color-text)]">{score >= 70 ? 'Barqaror' : score >= 40 ? 'Yo`lda' : 'Start'}</p>
+            </div>
+            <div className="rounded-2xl bg-[var(--color-divider)] p-3">
+              <p className="text-[11px] uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">Diqqat</p>
+              <p className="mt-1 text-sm font-bold text-[var(--color-text)]">{score >= 70 ? 'Balans' : score >= 40 ? 'Davom' : 'Faollik'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

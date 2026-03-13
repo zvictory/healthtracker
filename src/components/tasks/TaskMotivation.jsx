@@ -11,19 +11,19 @@ export default function TaskMotivation({ progress }) {
 
   return (
     <div className="px-4 lg:px-6 pb-3">
-      <div className="card p-4">
+      <div className="card p-5">
         <div className="flex items-center gap-3">
           <div className="flex-1">
-            <div className="h-2 bg-[var(--color-divider)] rounded-full overflow-hidden">
+            <div className="h-2.5 bg-[var(--color-divider)] rounded-full overflow-hidden">
               <div
                 className="h-full bg-primary rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
-          <span className="text-sm font-bold text-primary tabular-nums">{progress}%</span>
+          <span className="text-sm font-bold text-primary tabular-nums rounded-full bg-primary-50 px-3 py-1">{progress}%</span>
         </div>
-        <p className="text-sm mt-2 text-center text-[var(--color-text-secondary)]">{getMessage()}</p>
+        <p className="text-[13px] mt-3 text-center text-[var(--color-text-secondary)]">{getMessage()}</p>
       </div>
     </div>
   )

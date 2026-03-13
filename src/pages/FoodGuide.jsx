@@ -1,28 +1,32 @@
 import { useState } from 'react'
 import { beneficialFoods, harmfulFoods } from '../data/foodGuide'
+import { useProfile } from '../hooks/useProfile'
 import PageHeader from '../components/shared/PageHeader'
 
 export default function FoodGuide() {
   const [tab, setTab] = useState('good')
+  const { profile } = useProfile()
+  const hasBowelModule = profile.activeModules?.includes('bowel')
+  const subtitle = hasBowelModule ? 'Ich kelishi uchun foydali va zararli' : 'Sog\'liq uchun foydali va zararli'
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
-      <PageHeader title="Mahsulotlar" subtitle="Ich kelishi uchun foydali va zararli" />
+    <div>
+      <PageHeader title="Mahsulotlar" subtitle={subtitle} />
 
       <div className="px-4">
-        <div className="card flex p-1 mb-4">
+        <div className="card flex p-1.5 mb-4">
           <button
             onClick={() => setTab('good')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-              tab === 'good' ? 'bg-primary text-white' : 'text-[var(--color-text-secondary)]'
+            className={`flex-1 py-2.5 rounded-2xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+              tab === 'good' ? 'bg-primary text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
             }`}
           >
             Foydali
           </button>
           <button
             onClick={() => setTab('bad')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-              tab === 'bad' ? 'bg-[var(--color-danger)] text-white' : 'text-[var(--color-text-secondary)]'
+            className={`flex-1 py-2.5 rounded-2xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+              tab === 'bad' ? 'bg-[var(--color-danger)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)]'
             }`}
           >
             Zararli

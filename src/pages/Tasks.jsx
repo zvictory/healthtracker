@@ -93,7 +93,7 @@ export default function Tasks() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
+    <div>
       <ConfettiEffect trigger={confettiTrigger} />
 
       <PageHeader
@@ -123,25 +123,29 @@ export default function Tasks() {
             <div key={key} className="card overflow-hidden">
               <button
                 onClick={() => toggleGroup(key)}
-                className="w-full px-4 py-3 flex items-center justify-between cursor-pointer"
+                className="w-full px-5 py-4 flex items-center justify-between cursor-pointer"
               >
-                <div className="flex items-center gap-2.5">
-                  <GroupIcon size={16} className="text-[var(--color-text-secondary)]" />
-                  <span className="font-semibold text-sm">{group.label}</span>
-                  <span className="text-xs text-[var(--color-text-tertiary)]">{group.time}</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[var(--color-divider)] flex items-center justify-center flex-shrink-0">
+                    <GroupIcon size={16} className="text-[var(--color-text-secondary)]" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-sm block">{group.label}</span>
+                    <span className="text-[11px] text-[var(--color-text-tertiary)]">{group.time}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium text-primary">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs font-semibold rounded-full bg-primary-50 text-primary px-2.5 py-1">
                     {groupCompleted}/{groupTasks.length}
                   </span>
-                  <ChevronDown size={14} className={`text-[var(--color-text-tertiary)] transition-transform ${openGroups[key] ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={14} className={`text-[var(--color-text-tertiary)] transition-transform duration-200 ${openGroups[key] ? 'rotate-180' : ''}`} />
                 </div>
               </button>
 
               {/* Per-group progress bar */}
-              <div className="h-1 bg-[var(--color-divider)]">
+              <div className="h-1.5 bg-[var(--color-divider)]">
                 <div
-                  className="h-full bg-primary transition-all duration-300"
+                  className="h-full bg-primary rounded-r-full transition-all duration-500"
                   style={{ width: `${groupProgress * 100}%` }}
                 />
               </div>

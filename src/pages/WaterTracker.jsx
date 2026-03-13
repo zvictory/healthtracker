@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Plus, Minus, AlertTriangle, Baby, Droplets } from 'lucide-react'
 import { useWater } from '../hooks/useWater'
+import { useProfile } from '../hooks/useProfile'
 import GlassAnimation from '../components/water/GlassAnimation'
 import ProgressRing from '../components/shared/ProgressRing'
 import PageHeader from '../components/shared/PageHeader'
@@ -8,7 +9,9 @@ import ConfettiEffect from '../components/shared/ConfettiEffect'
 
 export default function WaterTracker() {
   const { consumed, target, log, progress, isConstipationMode, addGlass, removeGlass } = useWater()
+  const { profile } = useProfile()
   const [confettiTrigger, setConfettiTrigger] = useState(0)
+  const isBreastfeeding = profile.conditions?.includes('breastfeeding')
 
   const handleAdd = () => {
     addGlass()
@@ -18,14 +21,14 @@ export default function WaterTracker() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
+    <div>
       <ConfettiEffect trigger={confettiTrigger} />
 
       <PageHeader title="Suv Tracker" subtitle="Kunlik suv ichish kuzatuvi" />
 
       {isConstipationMode && (
-        <div className="mx-4 lg:mx-6 mb-4 p-3 bg-[var(--color-warning-light)] rounded-xl border border-[var(--color-warning)]/30">
-          <p className="text-sm text-[var(--color-warning)] font-medium flex items-center gap-2">
+        <div className="mx-4 lg:mx-6 mb-4 p-4 bg-[var(--color-warning-light)] rounded-2xl border border-[var(--color-warning)]/20">
+          <p className="text-sm text-[var(--color-warning)] font-medium flex items-center gap-2.5">
             <AlertTriangle size={16} className="flex-shrink-0" />
             Ich qotganligi sababli maqsad 12 stakanga oshirildi
           </p>
@@ -54,7 +57,7 @@ export default function WaterTracker() {
             onClick={removeGlass}
             disabled={consumed <= 0}
             aria-label="Stakan olib tashlash"
-            className="w-12 h-12 rounded-xl bg-[var(--color-bg-elevated)] border border-[var(--color-border)] flex items-center justify-center disabled:opacity-30 active:scale-95 transition-transform cursor-pointer"
+            className="w-14 h-14 rounded-2xl bg-[var(--color-divider)] flex items-center justify-center disabled:opacity-30 active:scale-95 transition-transform cursor-pointer"
           >
             <Minus size={20} />
           </button>
@@ -62,20 +65,22 @@ export default function WaterTracker() {
           <button
             onClick={handleAdd}
             aria-label="Stakan qo'shish"
-            className="w-16 h-16 rounded-2xl bg-[var(--color-water)] text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform cursor-pointer"
+            className="w-18 h-18 rounded-3xl bg-[var(--color-water)] text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform cursor-pointer"
           >
             <Plus size={28} />
           </button>
 
-          <div className="w-12" />
+          <div className="w-14" />
         </div>
 
-        <div className="mt-4 card p-3 text-center">
-          <p className="text-sm text-[var(--color-water)] font-medium flex items-center justify-center gap-2">
-            <Baby size={16} className="flex-shrink-0" />
-            Sut berdingizmi? Suv iching!
-          </p>
-        </div>
+        {isBreastfeeding && (
+          <div className="mt-4 card p-3 text-center">
+            <p className="text-sm text-[var(--color-water)] font-medium flex items-center justify-center gap-2">
+              <Baby size={16} className="flex-shrink-0" />
+              Sut berdingizmi? Suv iching!
+            </p>
+          </div>
+        )}
       </div>
 
       {log.length > 0 && (

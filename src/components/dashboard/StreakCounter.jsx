@@ -3,7 +3,7 @@ import { Flame, Shield } from 'lucide-react'
 export default function StreakCounter({ streak, shieldAvailable }) {
   return (
     <div className="card p-4 flex items-center gap-3 bg-warning-light">
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+      <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
         style={{ backgroundColor: 'rgba(245, 158, 11, 0.15)' }}
       >
         <Flame
@@ -17,7 +17,7 @@ export default function StreakCounter({ streak, shieldAvailable }) {
         <p className="text-[11px] text-[var(--color-text-tertiary)]">70%+ ball seriyasi</p>
       </div>
       {shieldAvailable && (
-        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[var(--color-card)]" title="Qalqon mavjud — 1 kun o'tkazib yuborishingiz mumkin">
+        <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[var(--color-card)]" title="Qalqon mavjud — 1 kun o'tkazib yuborishingiz mumkin">
           <Shield size={14} className="text-primary" />
           <span className="text-[10px] font-semibold text-primary">1</span>
         </div>
