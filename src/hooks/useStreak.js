@@ -1,9 +1,11 @@
 import { useMemo } from 'react'
 import { useDaily } from './useDaily'
-import { achievements } from '../data/achievements'
+import { useProfile } from './useProfile'
+import { getAchievements } from '../data/achievements'
 
 export function useStreak() {
   const { getHistoricalData } = useDaily()
+  const { profile } = useProfile()
 
   const historicalData = useMemo(() => getHistoricalData(30), [getHistoricalData])
 
@@ -39,11 +41,12 @@ export function useStreak() {
   }, [historicalData])
 
   const earnedAchievements = useMemo(() => {
-    return achievements.map(a => ({
+    const profileAchievements = getAchievements(profile.taskSet)
+    return profileAchievements.map(a => ({
       ...a,
       ...a.check(historicalData),
     }))
-  }, [historicalData])
+  }, [historicalData, profile.taskSet])
 
   const weeklySummary = useMemo(() => {
     const week = historicalData.slice(0, 7)

@@ -4,7 +4,7 @@ import { STORAGE_KEYS } from '../utils/constants'
 import { getTodayKey } from '../utils/dateUtils'
 import { getTaskSet } from '../data/taskSets'
 
-function createEmptyDay(date, taskSetId) {
+function createEmptyDay(date, taskSetId, waterTarget = 8) {
   const taskList = getTaskSet(taskSetId)
   const tasks = {}
   taskList.forEach(t => {
@@ -14,7 +14,7 @@ function createEmptyDay(date, taskSetId) {
   return {
     date,
     tasks,
-    water: { target: 10, consumed: 0, log: [] },
+    water: { target: waterTarget, consumed: 0, log: [] },
     bowel: { happened: false, time: null, consistency: null, notes: '' },
     meals: { entries: [], totalCalories: 0, sugarFreeStreak: true },
     exercise: { entries: [], totalMinutes: 0, totalCalories: 0 },
@@ -25,30 +25,33 @@ function createEmptyDay(date, taskSetId) {
   }
 }
 
-// Read taskSet from localStorage profile (avoid circular hook dependency)
-function getTaskSetId() {
+// Read profile from localStorage (avoid circular hook dependency)
+function getProfileConfig() {
   try {
     const stored = localStorage.getItem('healthtracker_profile')
     if (stored) {
       const profile = JSON.parse(stored)
-      return profile.taskSet || 'general_wellness'
+      return {
+        taskSetId: profile.taskSet || 'general_wellness',
+        waterTarget: profile.waterTarget || 8,
+      }
     }
   } catch { /* ignore */ }
-  return 'general_wellness'
+  return { taskSetId: 'general_wellness', waterTarget: 8 }
 }
 
 export function useDaily() {
   const [allData, setAllData] = useStorage(STORAGE_KEYS.DAILY, {})
   const todayKey = getTodayKey()
-  const [taskSetId] = useState(getTaskSetId)
+  const [{ taskSetId, waterTarget }] = useState(getProfileConfig)
 
   const todayData = useMemo(() => {
-    return allData[todayKey] || createEmptyDay(todayKey, taskSetId)
+    return allData[todayKey] || createEmptyDay(todayKey, taskSetId, waterTarget)
   }, [allData, todayKey, taskSetId])
 
   const updateTodayData = useCallback((partial) => {
     setAllData(prev => {
-      const current = prev[todayKey] || createEmptyDay(todayKey, taskSetId)
+      const current = prev[todayKey] || createEmptyDay(todayKey, taskSetId, waterTarget)
       const updated = { ...current }
 
       Object.keys(partial).forEach(key => {
@@ -70,7 +73,7 @@ export function useDaily() {
       const d = new Date(today)
       d.setDate(d.getDate() - i)
       const key = d.toISOString().split('T')[0]
-      result.push(allData[key] || createEmptyDay(key, taskSetId))
+      result.push(allData[key] || createEmptyDay(key, taskSetId, waterTarget))
     }
     return result
   }, [allData, taskSetId])

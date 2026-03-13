@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react'
 import { Plus, Sunrise, Sun, Moon, Star, ChevronDown } from 'lucide-react'
 import { useDaily } from '../hooks/useDaily'
 import { useScore } from '../hooks/useScore'
-import { defaultTasks } from '../data/defaultTasks'
+import { useProfile } from '../hooks/useProfile'
+import { getTaskSet } from '../data/taskSets'
 import { TASK_GROUPS } from '../utils/constants'
 import { getTimeOfDay } from '../utils/dateUtils'
 import TaskItem from '../components/tasks/TaskItem'
@@ -21,6 +22,8 @@ const GROUP_ICONS = {
 export default function Tasks() {
   const { todayData, updateTodayData } = useDaily()
   const score = useScore()
+  const { profile } = useProfile()
+  const profileTasks = useMemo(() => getTaskSet(profile.taskSet), [profile.taskSet])
   const [showAddModal, setShowAddModal] = useState(false)
   const [confettiTrigger, setConfettiTrigger] = useState(0)
 
@@ -35,8 +38,8 @@ export default function Tasks() {
       text: ct.text,
       icon: '⭐',
     }))
-    return [...defaultTasks, ...custom]
-  }, [customTasks])
+    return [...profileTasks, ...custom]
+  }, [customTasks, profileTasks])
 
   const groupedTasks = useMemo(() => {
     const groups = {}
