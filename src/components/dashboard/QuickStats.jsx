@@ -1,15 +1,21 @@
-import { Droplets, Activity, Smile, Meh, Frown } from 'lucide-react'
+import { Droplets, Activity, Smile, Meh, Frown, Dumbbell, UtensilsCrossed } from 'lucide-react'
 import { MOOD_OPTIONS } from '../../utils/constants'
+import Sparkline from '../shared/Sparkline'
 
 const MOOD_ICONS = { good: Smile, okay: Meh, bad: Frown }
 
-export default function QuickStats({ todayData, daysSinceLast, hasBowelModule = false }) {
+export default function QuickStats({ todayData, daysSinceLast, hasBowelModule = false, profile, historicalData = [] }) {
   const water = todayData.water || { consumed: 0, target: 10 }
   const bowelHappened = todayData.bowel?.happened
   const mood = todayData.mood
   const moodOption = MOOD_OPTIONS.find(m => m.id === mood)
   const MoodIcon = mood ? MOOD_ICONS[mood] : Smile
   const waterProgress = Math.min((water.consumed / water.target) * 100, 100)
+
+  const modules = profile?.activeModules || []
+
+  // Sparkline data — last 7 days of water
+  const waterHistory = [...historicalData.slice(0, 7)].reverse().map(d => d.water?.consumed || 0)
 
   const stats = [
     ...(hasBowelModule ? [{
@@ -19,6 +25,22 @@ export default function QuickStats({ todayData, daysSinceLast, hasBowelModule = 
       iconWrapperClassName: bowelHappened ? 'bg-success-light' : daysSinceLast >= 3 ? 'bg-danger-light' : 'bg-[var(--color-divider)]',
       value: bowelHappened ? 'Keldi' : `${daysSinceLast} kun`,
       label: 'Ich kelishi',
+    }] : []),
+    ...(modules.includes('exercise') ? [{
+      key: 'exercise',
+      icon: Dumbbell,
+      iconClassName: 'text-primary',
+      iconWrapperClassName: 'bg-primary-light',
+      value: `${todayData.exercise?.totalMinutes || 0} daq`,
+      label: 'Mashq',
+    }] : []),
+    ...(modules.includes('meals') ? [{
+      key: 'meals',
+      icon: UtensilsCrossed,
+      iconClassName: 'text-accent',
+      iconWrapperClassName: 'bg-accent-light',
+      value: `${todayData.meals?.entries?.length || 0} ta`,
+      label: 'Ovqat',
     }] : []),
     {
       key: 'mood',
@@ -43,7 +65,12 @@ export default function QuickStats({ todayData, daysSinceLast, hasBowelModule = 
               <p className="text-lg font-bold mt-1">{water.consumed}<span className="text-[var(--color-text-tertiary)] font-medium">/{water.target}</span></p>
             </div>
           </div>
-          <span className="rounded-full bg-water-light px-3 py-1 text-[11px] font-semibold text-water">{Math.round(waterProgress)}%</span>
+          <div className="flex flex-col items-end gap-1">
+            <span className="rounded-full bg-water-light px-3 py-1 text-[11px] font-semibold text-water">{Math.round(waterProgress)}%</span>
+            {waterHistory.length >= 2 && (
+              <Sparkline data={waterHistory} color="var(--color-water)" height={24} width={64} />
+            )}
+          </div>
         </div>
 
         <div className="mt-4 h-2.5 bg-[var(--color-divider)] rounded-full overflow-hidden">
@@ -62,7 +89,7 @@ export default function QuickStats({ todayData, daysSinceLast, hasBowelModule = 
         </div>
       </div>
 
-      <div className={`grid gap-3 ${stats.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+      <div className={`grid gap-3 ${stats.length <= 2 ? 'grid-cols-2' : 'grid-cols-2 lg:grid-cols-3'}`}>
         {stats.map(({ key, icon: Icon, iconClassName, iconWrapperClassName, value, label }) => (
           <div key={key} className="card p-4 lg:p-5">
             <div className="flex items-center gap-3">

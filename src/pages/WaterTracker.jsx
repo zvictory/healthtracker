@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import { Plus, Minus, AlertTriangle, Baby, Droplets } from 'lucide-react'
 import { useWater } from '../hooks/useWater'
 import { useProfile } from '../hooks/useProfile'
@@ -62,13 +63,15 @@ export default function WaterTracker() {
             <Minus size={20} />
           </button>
 
-          <button
+          <motion.button
             onClick={handleAdd}
+            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
             aria-label="Stakan qo'shish"
-            className="w-18 h-18 rounded-3xl bg-[var(--color-water)] text-white flex items-center justify-center shadow-lg active:scale-95 transition-transform cursor-pointer"
+            className="w-18 h-18 rounded-3xl bg-[var(--color-water)] text-white flex items-center justify-center shadow-lg cursor-pointer"
           >
             <Plus size={28} />
-          </button>
+          </motion.button>
 
           <div className="w-14" />
         </div>
@@ -88,15 +91,20 @@ export default function WaterTracker() {
           <h3 className="text-sm font-semibold mb-2">Bugungi log</h3>
           <div className="card p-3">
             <div className="flex flex-wrap gap-2">
-              {log.map((time, i) => (
-                <span
-                  key={i}
-                  className="px-2.5 py-1 bg-[var(--color-water-light)] rounded-lg text-xs text-[var(--color-water)] font-medium flex items-center gap-1"
-                >
-                  <Droplets size={10} />
-                  {time}
-                </span>
-              ))}
+              <AnimatePresence>
+                {log.map((time, i) => (
+                  <motion.span
+                    key={`${time}-${i}`}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                    className="px-2.5 py-1 bg-[var(--color-water-light)] rounded-lg text-xs text-[var(--color-water)] font-medium flex items-center gap-1"
+                  >
+                    <Droplets size={10} />
+                    {time}
+                  </motion.span>
+                ))}
+              </AnimatePresence>
             </div>
           </div>
         </div>

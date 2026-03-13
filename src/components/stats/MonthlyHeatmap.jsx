@@ -5,7 +5,7 @@ import { useDaily } from '../../hooks/useDaily'
 
 const WEEKDAYS = ['Du', 'Se', 'Cho', 'Pa', 'Ju', 'Sha', 'Ya']
 
-export default function MonthlyHeatmap() {
+export default function MonthlyHeatmap({ profile }) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const { getDayData } = useDaily()
   const [selectedDay, setSelectedDay] = useState(null)
@@ -89,27 +89,37 @@ export default function MonthlyHeatmap() {
         </div>
       </div>
 
-      {selectedDayData && (
-        <div className="card p-4 animate-fade-in">
-          <h4 className="text-sm font-semibold mb-2">
-            {format(selectedDay, 'dd.MM.yyyy')} — ma'lumotlar
-          </h4>
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div>
-              <p className="text-lg font-bold text-[var(--color-success)]">{selectedDayData.score || 0}%</p>
-              <p className="text-[10px] text-[var(--color-text-secondary)]">Ball</p>
-            </div>
-            <div>
-              <p className="text-lg font-bold text-[var(--color-water)]">{selectedDayData.water?.consumed || 0}</p>
-              <p className="text-[10px] text-[var(--color-text-secondary)]">Suv</p>
-            </div>
-            <div>
-              <p className="text-lg font-bold">{selectedDayData.bowel?.happened ? 'Ha' : "Yo'q"}</p>
-              <p className="text-[10px] text-[var(--color-text-secondary)]">Ich kelishi</p>
+      {selectedDayData && (() => {
+        const modules = profile?.activeModules || []
+        const cells = [
+          { value: `${selectedDayData.score || 0}%`, label: 'Ball', color: 'text-[var(--color-success)]' },
+          { value: selectedDayData.water?.consumed || 0, label: 'Suv', color: 'text-[var(--color-water)]' },
+        ]
+        if (modules.includes('bowel')) {
+          cells.push({ value: selectedDayData.bowel?.happened ? 'Ha' : "Yo'q", label: 'Ich kelishi', color: '' })
+        }
+        if (modules.includes('exercise')) {
+          cells.push({ value: `${selectedDayData.exercise?.totalMinutes || 0} daq`, label: 'Mashq', color: 'text-[var(--color-primary)]' })
+        }
+        if (modules.includes('meals')) {
+          cells.push({ value: selectedDayData.meals?.entries?.length || 0, label: 'Ovqat', color: 'text-[var(--color-warning)]' })
+        }
+        return (
+          <div className="card p-4 animate-fade-in">
+            <h4 className="text-sm font-semibold mb-2">
+              {format(selectedDay, 'dd.MM.yyyy')} — ma'lumotlar
+            </h4>
+            <div className={`grid gap-2 text-center ${cells.length <= 3 ? 'grid-cols-3' : cells.length <= 4 ? 'grid-cols-4' : 'grid-cols-5'}`}>
+              {cells.map(({ value, label, color }) => (
+                <div key={label}>
+                  <p className={`text-lg font-bold ${color}`}>{value}</p>
+                  <p className="text-[10px] text-[var(--color-text-secondary)]">{label}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
     </div>
   )
 }

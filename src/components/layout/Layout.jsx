@@ -1,15 +1,19 @@
 import { Suspense } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import { motion, AnimatePresence } from 'motion/react'
 import Sidebar from './Sidebar'
 import BottomNav from './BottomNav'
 import LoadingSpinner from '../shared/LoadingSpinner'
 import Toast from '../shared/Toast'
 import { useNotifications } from '../../hooks/useNotifications'
 import { useDarkMode } from '../../hooks/useDarkMode'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 
 export default function Layout() {
   const { toast, dismissToast } = useNotifications()
   useDarkMode()
+  const location = useLocation()
+  const reduced = useReducedMotion()
 
   return (
     <div className="relative min-h-screen text-[var(--color-text)]">
@@ -23,9 +27,19 @@ export default function Layout() {
         <Sidebar />
         <main className="flex-1 min-w-0 pb-24 lg:pb-6">
           <div className="mx-auto max-w-[1440px]">
-            <Suspense fallback={<LoadingSpinner />}>
-              <Outlet />
-            </Suspense>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={reduced ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduced ? undefined : { opacity: 0 }}
+                transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
+              >
+                <Suspense fallback={<LoadingSpinner />}>
+                  <Outlet />
+                </Suspense>
+              </motion.div>
+            </AnimatePresence>
           </div>
           {toast && <Toast message={toast} onDismiss={dismissToast} />}
         </main>

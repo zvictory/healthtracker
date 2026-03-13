@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import { Plus, X, Cookie, Flame } from 'lucide-react'
 import { useMeals } from '../hooks/useMeals'
 import { useProfile } from '../hooks/useProfile'
@@ -41,9 +42,10 @@ export default function MealTracker() {
         action={
           <button
             onClick={() => setShowForm(true)}
+            aria-label="Ovqat qo'shish"
             className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center cursor-pointer"
           >
-            <Plus size={18} />
+            <Plus size={18} aria-hidden="true" />
           </button>
         }
       />
@@ -89,10 +91,18 @@ export default function MealTracker() {
           />
         ) : (
           <div className="space-y-2">
+            <AnimatePresence>
             {meals.entries.map(entry => {
               const mealType = MEAL_TYPES.find(m => m.id === entry.type)
               return (
-                <div key={entry.id} className="card p-4 flex items-center gap-3">
+                <motion.div
+                  key={entry.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -40 }}
+                  transition={{ duration: 0.25 }}
+                  className="card p-4 flex items-center gap-3"
+                >
                   <span className="text-xl">{mealType?.emoji || '🍽️'}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{entry.description}</p>
@@ -111,12 +121,13 @@ export default function MealTracker() {
                       )}
                     </div>
                   </div>
-                  <button onClick={() => removeMeal(entry.id)} className="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-danger)] cursor-pointer">
-                    <X size={14} />
+                  <button onClick={() => removeMeal(entry.id)} aria-label="O'chirish" className="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-danger)] cursor-pointer">
+                    <X size={14} aria-hidden="true" />
                   </button>
-                </div>
+                </motion.div>
               )
             })}
+            </AnimatePresence>
           </div>
         )}
       </div>
@@ -146,6 +157,7 @@ export default function MealTracker() {
             <input
               type="text"
               placeholder="Nima yedingiz?"
+              aria-label="Ovqat tavsifi"
               value={form.description}
               onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
               className="w-full px-4 py-3 rounded-2xl bg-[var(--color-divider)] text-sm outline-none focus:ring-2 focus:ring-primary/30"
@@ -155,6 +167,7 @@ export default function MealTracker() {
             <input
               type="number"
               placeholder="Kaloriya (ixtiyoriy)"
+              aria-label="Kaloriya"
               value={form.calories}
               onChange={e => setForm(f => ({ ...f, calories: e.target.value }))}
               className="w-full px-4 py-3 rounded-2xl bg-[var(--color-divider)] text-sm outline-none focus:ring-2 focus:ring-primary/30"

@@ -20,6 +20,7 @@ export default function AddTaskModal({ onAdd, onClose }) {
           value={text}
           onChange={e => setText(e.target.value)}
           placeholder="Vazifa matni..."
+          aria-label="Vazifa matni"
           className="w-full px-4 py-3 bg-[var(--color-bg)] rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
           autoFocus
         />

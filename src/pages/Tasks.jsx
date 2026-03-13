@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react'
-import { Plus, Sunrise, Sun, Moon, Star, ChevronDown } from 'lucide-react'
+import { Plus, Sunrise, Sun, Moon, Star, ChevronDown, CheckCircle2 } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 import { useDaily } from '../hooks/useDaily'
 import { useScore } from '../hooks/useScore'
 import { useProfile } from '../hooks/useProfile'
+import { useTranslation } from '../hooks/useTranslation'
 import { getTaskSet } from '../data/taskSets'
 import { TASK_GROUPS } from '../utils/constants'
 import { getTimeOfDay } from '../utils/dateUtils'
@@ -11,6 +13,7 @@ import TaskMotivation from '../components/tasks/TaskMotivation'
 import AddTaskModal from '../components/tasks/AddTaskModal'
 import PageHeader from '../components/shared/PageHeader'
 import ConfettiEffect from '../components/shared/ConfettiEffect'
+import Toast from '../components/shared/Toast'
 
 const GROUP_ICONS = {
   morning: Sunrise,
@@ -26,6 +29,8 @@ export default function Tasks() {
   const profileTasks = useMemo(() => getTaskSet(profile.taskSet), [profile.taskSet])
   const [showAddModal, setShowAddModal] = useState(false)
   const [confettiTrigger, setConfettiTrigger] = useState(0)
+  const [undoToast, setUndoToast] = useState(null)
+  const { t } = useTranslation()
 
   const tasks = todayData.tasks || {}
   const customTasks = todayData.custom_tasks || []
@@ -78,6 +83,13 @@ export default function Tasks() {
 
     if (newDone) {
       setConfettiTrigger(prev => prev + 1)
+      // Show undo toast
+      setUndoToast({
+        message: t('tasks.task_done'),
+        undo: () => updateTodayData({
+          tasks: { ...todayData.tasks, [taskId]: { done: false, time: null } },
+        }),
+      })
     }
 
     updateTodayData({
@@ -100,14 +112,15 @@ export default function Tasks() {
       <ConfettiEffect trigger={confettiTrigger} />
 
       <PageHeader
-        title="Vazifalar"
-        subtitle={`${completedCount}/${totalCount} bajarildi`}
+        title={t('tasks.title')}
+        subtitle={t('tasks.completed', { done: completedCount, total: totalCount })}
         action={
           <button
             onClick={() => setShowAddModal(true)}
+            aria-label={t('tasks.add_task')}
             className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center cursor-pointer"
           >
-            <Plus size={18} />
+            <Plus size={18} aria-hidden="true" />
           </button>
         }
       />
@@ -121,6 +134,7 @@ export default function Tasks() {
           const GroupIcon = GROUP_ICONS[key]
 
           const groupProgress = groupTasks.length > 0 ? groupCompleted / groupTasks.length : 0
+          const groupDone = groupTasks.length > 0 && groupCompleted === groupTasks.length
 
           return (
             <div key={key} className="card overflow-hidden">
@@ -129,8 +143,11 @@ export default function Tasks() {
                 className="w-full px-5 py-4 flex items-center justify-between cursor-pointer"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[var(--color-divider)] flex items-center justify-center flex-shrink-0">
-                    <GroupIcon size={16} className="text-[var(--color-text-secondary)]" />
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${groupDone ? 'bg-[var(--color-success-light)]' : 'bg-[var(--color-divider)]'}`}>
+                    {groupDone
+                      ? <CheckCircle2 size={16} className="text-[var(--color-success)]" />
+                      : <GroupIcon size={16} className="text-[var(--color-text-secondary)]" />
+                    }
                   </div>
                   <div>
                     <span className="font-semibold text-sm block">{group.label}</span>
@@ -148,24 +165,32 @@ export default function Tasks() {
               {/* Per-group progress bar */}
               <div className="h-1.5 bg-[var(--color-divider)]">
                 <div
-                  className="h-full bg-primary rounded-r-full transition-all duration-500"
+                  className={`h-full rounded-r-full transition-all duration-500 ${groupDone ? 'bg-[var(--color-success)]' : 'bg-primary'}`}
                   style={{ width: `${groupProgress * 100}%` }}
                 />
               </div>
 
-              {openGroups[key] && (
-                <div className="border-t border-[var(--color-divider)]">
-                  {groupTasks.map(task => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      done={tasks[task.id]?.done || false}
-                      time={tasks[task.id]?.time}
-                      onToggle={() => toggleTask(task.id)}
-                    />
-                  ))}
-                </div>
-              )}
+              <AnimatePresence>
+                {openGroups[key] && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="overflow-hidden border-t border-[var(--color-divider)]"
+                  >
+                    {groupTasks.map(task => (
+                      <TaskItem
+                        key={task.id}
+                        task={task}
+                        done={tasks[task.id]?.done || false}
+                        time={tasks[task.id]?.time}
+                        onToggle={() => toggleTask(task.id)}
+                      />
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )
         })}
@@ -177,6 +202,16 @@ export default function Tasks() {
           onClose={() => setShowAddModal(false)}
         />
       )}
+
+      <AnimatePresence>
+        {undoToast && (
+          <Toast
+            message={undoToast.message}
+            action={undoToast.undo}
+            onDismiss={() => setUndoToast(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

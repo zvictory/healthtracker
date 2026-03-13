@@ -38,6 +38,7 @@ export default function BowelLogForm({ onSave, onCancel }) {
         value={notes}
         onChange={e => setNotes(e.target.value)}
         placeholder="Izoh (ixtiyoriy)..."
+        aria-label="Izoh"
         className="w-full px-3 py-2 bg-[var(--color-bg)] rounded-xl border border-[var(--color-border)] text-sm resize-none h-16 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
       />
 

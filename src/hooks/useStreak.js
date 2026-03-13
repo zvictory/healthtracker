@@ -57,8 +57,10 @@ export function useStreak() {
       const tasks = d.tasks || {}
       return sum + Object.values(tasks).filter(t => t.done).length
     }, 0)
+    const exerciseMinutes = week.reduce((sum, d) => sum + (d.exercise?.totalMinutes || 0), 0)
+    const totalMeals = week.reduce((sum, d) => sum + (d.meals?.entries?.length || 0), 0)
 
-    return { avgScore, totalWater, bowelDays, completedTasks }
+    return { avgScore, totalWater, bowelDays, completedTasks, exerciseMinutes, totalMeals }
   }, [historicalData])
 
   return { currentStreak, shieldUsed, shieldAvailable, earnedAchievements, weeklySummary, historicalData }

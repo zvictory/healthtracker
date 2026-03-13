@@ -1,3 +1,4 @@
+import { motion } from 'motion/react'
 import { Smile, Meh, Frown } from 'lucide-react'
 import { MOOD_OPTIONS } from '../../utils/constants'
 
@@ -18,9 +19,12 @@ export default function MoodSelector({ mood, onSelect }) {
           const styles = MOOD_STYLES[option.id]
           const isSelected = mood === option.id
           return (
-            <button
+            <motion.button
               key={option.id}
               onClick={() => onSelect(option.id)}
+              whileTap={{ scale: 0.93 }}
+              animate={isSelected ? { scale: [1, 1.06, 1] } : {}}
+              transition={{ duration: 0.25 }}
               className={`flex flex-col items-center gap-2.5 py-4 rounded-2xl transition-all duration-200 cursor-pointer ${
                 isSelected ? `${styles.active} shadow-sm` : 'bg-[var(--color-divider)] hover:bg-[var(--color-card-hover)]'
               }`}
@@ -33,7 +37,7 @@ export default function MoodSelector({ mood, onSelect }) {
               <span className={`text-xs font-semibold ${isSelected ? styles.text : 'text-[var(--color-text-secondary)]'}`}>
                 {option.label}
               </span>
-            </button>
+            </motion.button>
           )
         })}
       </div>

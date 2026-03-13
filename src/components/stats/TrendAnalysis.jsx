@@ -1,27 +1,50 @@
 import { useMemo } from 'react'
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
-import { defaultTasks } from '../../data/defaultTasks'
+import { TrendingUp, TrendingDown, Minus, Dumbbell, UtensilsCrossed } from 'lucide-react'
+import { getTaskSet } from '../../data/taskSets'
 
-export default function TrendAnalysis({ historicalData }) {
+export default function TrendAnalysis({ historicalData, profile }) {
   const analysis = useMemo(() => {
     if (historicalData.length < 7) return null
 
     const thisWeek = historicalData.slice(0, 7)
     const lastWeek = historicalData.slice(7, 14)
+    const hasLastWeek = lastWeek.length === 7
 
     const thisAvg = Math.round(thisWeek.reduce((s, d) => s + (d.score || 0), 0) / 7)
-    const lastAvg = lastWeek.length === 7
+    const lastAvg = hasLastWeek
       ? Math.round(lastWeek.reduce((s, d) => s + (d.score || 0), 0) / 7)
       : null
 
     const thisWater = Math.round(thisWeek.reduce((s, d) => s + (d.water?.consumed || 0), 0) / 7 * 10) / 10
-    const lastWater = lastWeek.length === 7
+    const lastWater = hasLastWeek
       ? Math.round(lastWeek.reduce((s, d) => s + (d.water?.consumed || 0), 0) / 7 * 10) / 10
       : null
 
-    const thisBowel = thisWeek.filter(d => d.bowel?.happened).length
-    const lastBowel = lastWeek.length === 7 ? lastWeek.filter(d => d.bowel?.happened).length : null
+    // Bowel — only for bowel profiles
+    const hasBowel = profile?.activeModules?.includes('bowel')
+    const thisBowel = hasBowel ? thisWeek.filter(d => d.bowel?.happened).length : null
+    const lastBowel = hasBowel && hasLastWeek ? lastWeek.filter(d => d.bowel?.happened).length : null
 
+    // Exercise — only for exercise profiles
+    const hasExercise = profile?.activeModules?.includes('exercise')
+    const thisExercise = hasExercise
+      ? Math.round(thisWeek.reduce((s, d) => s + (d.exercise?.totalMinutes || 0), 0) / 7)
+      : null
+    const lastExercise = hasExercise && hasLastWeek
+      ? Math.round(lastWeek.reduce((s, d) => s + (d.exercise?.totalMinutes || 0), 0) / 7)
+      : null
+
+    // Meals — only for meals profiles
+    const hasMeals = profile?.activeModules?.includes('meals')
+    const thisMeals = hasMeals
+      ? Math.round(thisWeek.reduce((s, d) => s + (d.meals?.entries?.length || 0), 0) / 7 * 10) / 10
+      : null
+    const lastMeals = hasMeals && hasLastWeek
+      ? Math.round(lastWeek.reduce((s, d) => s + (d.meals?.entries?.length || 0), 0) / 7 * 10) / 10
+      : null
+
+    // Task analysis with profile-aware task names
+    const tasks = getTaskSet(profile?.taskSet || 'general_wellness')
     const taskCounts = {}
     thisWeek.forEach(day => {
       if (!day.tasks) return
@@ -33,19 +56,29 @@ export default function TrendAnalysis({ historicalData }) {
     })
 
     const sorted = Object.entries(taskCounts).sort(([, a], [, b]) => (b.done / b.total) - (a.done / a.total))
+    const getTaskName = (id) => {
+      const task = tasks.find(t => t.id === id)
+      return task ? task.text.replace(/^.\s*/, '') : id
+    }
     const mostCompleted = sorted.slice(0, 3).map(([id, c]) => ({
       id,
-      name: defaultTasks.find(t => t.id === id)?.text?.slice(2) || id,
+      name: getTaskName(id),
       rate: Math.round((c.done / c.total) * 100),
     }))
     const mostSkipped = [...sorted].reverse().slice(0, 3).map(([id, c]) => ({
       id,
-      name: defaultTasks.find(t => t.id === id)?.text?.slice(2) || id,
+      name: getTaskName(id),
       rate: Math.round(((c.total - c.done) / c.total) * 100),
     }))
 
-    return { thisAvg, lastAvg, thisWater, lastWater, thisBowel, lastBowel, mostCompleted, mostSkipped }
-  }, [historicalData])
+    return {
+      thisAvg, lastAvg, thisWater, lastWater,
+      thisBowel, lastBowel, hasBowel,
+      thisExercise, lastExercise, hasExercise,
+      thisMeals, lastMeals, hasMeals,
+      mostCompleted, mostSkipped,
+    }
+  }, [historicalData, profile])
 
   if (!analysis) return null
 
@@ -81,16 +114,42 @@ export default function TrendAnalysis({ historicalData }) {
               )}
             </div>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Ich kelishi</span>
-            <div className="flex items-center gap-2">
-              <TrendIcon current={analysis.thisBowel} previous={analysis.lastBowel} />
-              <span className="text-sm font-bold">{analysis.thisBowel}/7 kun</span>
-              {analysis.lastBowel !== null && (
-                <span className="text-xs text-[var(--color-text-tertiary)]">({analysis.lastBowel}/7)</span>
-              )}
+          {analysis.hasBowel && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Ich kelishi</span>
+              <div className="flex items-center gap-2">
+                <TrendIcon current={analysis.thisBowel} previous={analysis.lastBowel} />
+                <span className="text-sm font-bold">{analysis.thisBowel}/7 kun</span>
+                {analysis.lastBowel !== null && (
+                  <span className="text-xs text-[var(--color-text-tertiary)]">({analysis.lastBowel}/7)</span>
+                )}
+              </div>
             </div>
-          </div>
+          )}
+          {analysis.hasExercise && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Mashq (o'rt. daq/kun)</span>
+              <div className="flex items-center gap-2">
+                <TrendIcon current={analysis.thisExercise} previous={analysis.lastExercise} />
+                <span className="text-sm font-bold">{analysis.thisExercise} daq</span>
+                {analysis.lastExercise !== null && (
+                  <span className="text-xs text-[var(--color-text-tertiary)]">({analysis.lastExercise})</span>
+                )}
+              </div>
+            </div>
+          )}
+          {analysis.hasMeals && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Ovqat (o'rt. yozuv/kun)</span>
+              <div className="flex items-center gap-2">
+                <TrendIcon current={analysis.thisMeals} previous={analysis.lastMeals} />
+                <span className="text-sm font-bold">{analysis.thisMeals}</span>
+                {analysis.lastMeals !== null && (
+                  <span className="text-xs text-[var(--color-text-tertiary)]">({analysis.lastMeals})</span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,35 +1,38 @@
+import { useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Home, ListChecks, Droplets, BookOpen, BarChart3, UtensilsCrossed, Dumbbell, Scale } from 'lucide-react'
 import { useProfile } from '../../hooks/useProfile'
+import { useTranslation } from '../../hooks/useTranslation'
 
-function getTabs(activeModules) {
+function getTabs(activeModules, t) {
   const tabs = [
-    { path: '/', icon: Home, label: 'Bosh sahifa' },
-    { path: '/tasks', icon: ListChecks, label: 'Vazifalar' },
-    { path: '/water', icon: Droplets, label: 'Suv' },
+    { path: '/', icon: Home, label: t('nav.home') },
+    { path: '/tasks', icon: ListChecks, label: t('nav.tasks') },
+    { path: '/water', icon: Droplets, label: t('nav.water') },
   ]
 
   // 4th tab — profile-specific module
   if (activeModules?.includes('bowel')) {
-    tabs.push({ path: '/bowel', icon: BookOpen, label: 'Jurnal' })
+    tabs.push({ path: '/bowel', icon: BookOpen, label: t('nav.journal') })
   } else if (activeModules?.includes('meals')) {
-    tabs.push({ path: '/meals', icon: UtensilsCrossed, label: 'Ovqat' })
+    tabs.push({ path: '/meals', icon: UtensilsCrossed, label: t('nav.meals') })
   } else if (activeModules?.includes('exercise')) {
-    tabs.push({ path: '/exercise', icon: Dumbbell, label: 'Mashq' })
+    tabs.push({ path: '/exercise', icon: Dumbbell, label: t('nav.exercise') })
   }
 
   // 5th tab — stats always
-  tabs.push({ path: '/stats', icon: BarChart3, label: 'Statistika' })
+  tabs.push({ path: '/stats', icon: BarChart3, label: t('nav.stats') })
 
   return tabs
 }
 
 export default function BottomNav() {
   const { profile } = useProfile()
-  const tabs = getTabs(profile.activeModules)
+  const { t } = useTranslation()
+  const tabs = useMemo(() => getTabs(profile.activeModules, t), [profile.activeModules, t])
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] lg:hidden" aria-label="Asosiy navigatsiya">
+    <nav className="fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] lg:hidden" aria-label={t('nav.main_nav')}>
       <div className="glass-nav mx-auto max-w-[720px] rounded-[28px] px-2 py-2">
         <div className="flex items-center justify-around gap-1">
           {tabs.map(({ path, icon: Icon, label }) => (

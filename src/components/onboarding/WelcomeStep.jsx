@@ -22,10 +22,11 @@ export default function WelcomeStep({ name, onNext }) {
       </p>
 
       <div className="w-full mt-8">
-        <label className="block text-left text-sm font-semibold mb-2">
+        <label htmlFor="user-name" className="block text-left text-sm font-semibold mb-2">
           Ismingiz
         </label>
         <input
+          id="user-name"
           type="text"
           value={value}
           onChange={e => setValue(e.target.value)}

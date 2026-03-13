@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import { Plus, X, Timer, Flame, Dumbbell } from 'lucide-react'
 import { useExercise } from '../hooks/useExercise'
 import PageHeader from '../components/shared/PageHeader'
@@ -46,9 +47,10 @@ export default function ExerciseTracker() {
         action={
           <button
             onClick={() => setShowForm(true)}
+            aria-label="Mashq qo'shish"
             className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center cursor-pointer"
           >
-            <Plus size={18} />
+            <Plus size={18} aria-hidden="true" />
           </button>
         }
       />
@@ -91,10 +93,18 @@ export default function ExerciseTracker() {
           />
         ) : (
           <div className="space-y-2">
+            <AnimatePresence>
             {exercise.entries.map(entry => {
               const type = EXERCISE_TYPES.find(t => t.id === entry.type)
               return (
-                <div key={entry.id} className="card p-4 flex items-center gap-3">
+                <motion.div
+                  key={entry.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -40 }}
+                  transition={{ duration: 0.25 }}
+                  className="card p-4 flex items-center gap-3"
+                >
                   <span className="text-xl">{type?.emoji || '⚡'}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold">{entry.label}</p>
@@ -106,12 +116,13 @@ export default function ExerciseTracker() {
                       <span className="text-[11px] font-medium text-[var(--color-danger)]">{entry.caloriesBurned} kkal</span>
                     </div>
                   </div>
-                  <button onClick={() => removeExercise(entry.id)} className="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-danger)] cursor-pointer">
-                    <X size={14} />
+                  <button onClick={() => removeExercise(entry.id)} aria-label="O'chirish" className="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-danger)] cursor-pointer">
+                    <X size={14} aria-hidden="true" />
                   </button>
-                </div>
+                </motion.div>
               )
             })}
+            </AnimatePresence>
           </div>
         )}
       </div>
@@ -137,8 +148,9 @@ export default function ExerciseTracker() {
             </div>
 
             <div>
-              <label className="text-sm font-semibold mb-2 block">Davomiyligi (daqiqa)</label>
+              <label htmlFor="exercise-duration" className="text-sm font-semibold mb-2 block">Davomiyligi (daqiqa)</label>
               <input
+                id="exercise-duration"
                 type="number"
                 value={form.minutes}
                 onChange={e => setForm(f => ({ ...f, minutes: e.target.value }))}

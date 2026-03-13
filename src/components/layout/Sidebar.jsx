@@ -1,26 +1,28 @@
+import { useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Heart, Home, ListChecks, Droplets, BookOpen, BarChart3, Apple, Settings, Info, UtensilsCrossed, Dumbbell, Scale } from 'lucide-react'
 import { useProfile } from '../../hooks/useProfile'
+import { useTranslation } from '../../hooks/useTranslation'
 
-function getMainNav(activeModules) {
+function getMainNav(activeModules, t) {
   const m = activeModules || []
   return [
-    { path: '/', icon: Home, label: 'Bosh sahifa' },
-    { path: '/tasks', icon: ListChecks, label: 'Vazifalar' },
-    { path: '/water', icon: Droplets, label: 'Suv' },
-    ...(m.includes('bowel') ? [{ path: '/bowel', icon: BookOpen, label: 'Jurnal' }] : []),
-    ...(m.includes('meals') ? [{ path: '/meals', icon: UtensilsCrossed, label: 'Ovqatlanish' }] : []),
-    ...(m.includes('exercise') ? [{ path: '/exercise', icon: Dumbbell, label: 'Mashqlar' }] : []),
-    ...(m.includes('body') ? [{ path: '/body', icon: Scale, label: 'Tana' }] : []),
-    { path: '/stats', icon: BarChart3, label: 'Statistika' },
+    { path: '/', icon: Home, label: t('nav.home') },
+    { path: '/tasks', icon: ListChecks, label: t('nav.tasks') },
+    { path: '/water', icon: Droplets, label: t('nav.water') },
+    ...(m.includes('bowel') ? [{ path: '/bowel', icon: BookOpen, label: t('nav.journal') }] : []),
+    ...(m.includes('meals') ? [{ path: '/meals', icon: UtensilsCrossed, label: t('nav.meals_full') }] : []),
+    ...(m.includes('exercise') ? [{ path: '/exercise', icon: Dumbbell, label: t('nav.exercise_full') }] : []),
+    ...(m.includes('body') ? [{ path: '/body', icon: Scale, label: t('nav.body') }] : []),
+    { path: '/stats', icon: BarChart3, label: t('nav.stats') },
   ]
 }
 
-function getSecondaryNav(activeModules) {
+function getSecondaryNav(activeModules, t) {
   const m = activeModules || []
   return [
-    ...(m.includes('food_guide') ? [{ path: '/food-guide', icon: Apple, label: 'Mahsulotlar' }] : []),
-    { path: '/settings', icon: Settings, label: 'Sozlamalar' },
+    ...(m.includes('food_guide') ? [{ path: '/food-guide', icon: Apple, label: t('nav.products') }] : []),
+    { path: '/settings', icon: Settings, label: t('nav.settings') },
   ]
 }
 
@@ -47,8 +49,9 @@ function SidebarLink({ path, icon: Icon, label }) {
 
 export default function Sidebar() {
   const { profile } = useProfile()
-  const mainNav = getMainNav(profile.activeModules)
-  const secondaryNav = getSecondaryNav(profile.activeModules)
+  const { t } = useTranslation()
+  const mainNav = useMemo(() => getMainNav(profile.activeModules, t), [profile.activeModules, t])
+  const secondaryNav = useMemo(() => getSecondaryNav(profile.activeModules, t), [profile.activeModules, t])
 
   return (
     <aside className="hidden lg:block w-[308px] shrink-0 p-4">
@@ -59,19 +62,19 @@ export default function Sidebar() {
               <Heart size={20} className="text-white" fill="white" />
             </div>
             <div>
-              <p className="text-[15px] font-bold tracking-tight">Sog'liq Kuzatuvchi</p>
-              <p className="text-[11px] text-white/72 mt-0.5 font-medium">Kunlik ritm va sog'liq nazorati</p>
+              <p className="text-[15px] font-bold tracking-tight">{t('sidebar.app_name')}</p>
+              <p className="text-[11px] text-white/72 mt-0.5 font-medium">{t('sidebar.app_tagline')}</p>
             </div>
           </div>
           {profile.name && (
             <div className="mt-4 inline-flex rounded-full bg-white/16 px-3 py-1.5 text-xs font-semibold text-white/88">
-              {profile.name} uchun moslashtirilgan
+              {t('sidebar.customized_for', { name: profile.name })}
             </div>
           )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto pt-5" aria-label="Asosiy navigatsiya">
-          <p className="px-2 mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">Asosiy</p>
+        <nav className="flex-1 overflow-y-auto pt-5" aria-label={t('nav.main_nav')}>
+          <p className="px-2 mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">{t('nav.main')}</p>
           <div className="space-y-1.5">
             {mainNav.map(item => (
               <SidebarLink key={item.path} {...item} />
@@ -80,7 +83,7 @@ export default function Sidebar() {
 
           <div className="h-px bg-[var(--color-divider)] my-5 mx-2" />
 
-          <p className="px-2 mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">Qo'shimcha</p>
+          <p className="px-2 mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">{t('nav.extra')}</p>
           <div className="space-y-1.5">
             {secondaryNav.map(item => (
               <SidebarLink key={item.path} {...item} />
@@ -93,7 +96,7 @@ export default function Sidebar() {
             <Info size={14} className="text-[var(--color-text-tertiary)] flex-shrink-0" />
           </div>
           <p className="text-[11px] leading-relaxed text-[var(--color-text-tertiary)]">
-            Bu tibbiy maslahat emas. Belgilar kuchaysa yoki davom etsa, shifokorga murojaat qiling.
+            {t('settings.disclaimer_short')}
           </p>
         </div>
       </div>

@@ -33,6 +33,7 @@ export default function BodyMetrics() {
               type="number"
               step="0.1"
               placeholder="kg"
+              aria-label="Vazn (kg)"
               value={body.weight || ''}
               onChange={e => updateBody({ weight: parseFloat(e.target.value) || null })}
               className="flex-1 px-4 py-3 rounded-2xl bg-[var(--color-divider)] text-sm outline-none focus:ring-2 focus:ring-primary/30 text-center text-lg font-bold"
@@ -57,6 +58,7 @@ export default function BodyMetrics() {
               type="number"
               step="0.5"
               placeholder="sm"
+              aria-label="Bel aylanasi (sm)"
               value={body.waist || ''}
               onChange={e => updateBody({ waist: parseFloat(e.target.value) || null })}
               className="flex-1 px-4 py-3 rounded-2xl bg-[var(--color-divider)] text-sm outline-none focus:ring-2 focus:ring-primary/30 text-center text-lg font-bold"
@@ -79,9 +81,10 @@ export default function BodyMetrics() {
             </div>
             <div className="space-y-3">
               <div>
-                <label className="text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 block">Ochqoringa (nahor)</label>
+                <label htmlFor="glucose-fasting" className="text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 block">Ochqoringa (nahor)</label>
                 <div className="flex items-center gap-3">
                   <input
+                    id="glucose-fasting"
                     type="number"
                     step="0.1"
                     placeholder="—"
@@ -93,9 +96,10 @@ export default function BodyMetrics() {
                 </div>
               </div>
               <div>
-                <label className="text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 block">Ovqatdan 2 soat keyin</label>
+                <label htmlFor="glucose-postmeal" className="text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 block">Ovqatdan 2 soat keyin</label>
                 <div className="flex items-center gap-3">
                   <input
+                    id="glucose-postmeal"
                     type="number"
                     step="0.1"
                     placeholder="—"

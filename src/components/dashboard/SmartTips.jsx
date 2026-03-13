@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { Lightbulb } from 'lucide-react'
 import { useSmartTips } from '../../hooks/useSmartTips'
 
@@ -23,20 +24,31 @@ export default function SmartTips() {
         <div className="w-9 h-9 rounded-xl bg-warning-light flex items-center justify-center flex-shrink-0">
           <Lightbulb size={16} className="text-warning" />
         </div>
-        <div className="flex-1 min-h-[44px]">
+        <div className="flex-1 min-h-[44px] relative">
           <p className="text-[11px] font-bold uppercase tracking-wider text-warning mb-1">Maslahat</p>
-          <p key={currentIndex} className="text-sm leading-relaxed animate-fade-in">
-            {tips[currentIndex]}
-          </p>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={currentIndex}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.25 }}
+              className="text-sm leading-relaxed"
+            >
+              {tips[currentIndex]}
+            </motion.p>
+          </AnimatePresence>
         </div>
       </div>
       {tips.length > 1 && (
         <div className="flex justify-center gap-1.5 mt-3 pl-2">
           {tips.map((_, i) => (
-            <div
+            <motion.div
               key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === currentIndex ? 'bg-warning w-4' : 'bg-[var(--color-border)] w-1.5'
+              animate={{ width: i === currentIndex ? 16 : 6 }}
+              transition={{ duration: 0.3 }}
+              className={`h-1.5 rounded-full ${
+                i === currentIndex ? 'bg-warning' : 'bg-[var(--color-border)]'
               }`}
             />
           ))}

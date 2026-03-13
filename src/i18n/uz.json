@@ -1,0 +1,268 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "tasks": "Vazifalar",
+    "water": "Suv",
+    "journal": "Jurnal",
+    "meals": "Ovqat",
+    "meals_full": "Ovqatlanish",
+    "exercise": "Mashq",
+    "exercise_full": "Mashqlar",
+    "body": "Tana",
+    "stats": "Statistika",
+    "products": "Mahsulotlar",
+    "settings": "Sozlamalar",
+    "main": "Asosiy",
+    "extra": "Qo'shimcha",
+    "main_nav": "Asosiy navigatsiya"
+  },
+  "dashboard": {
+    "greeting_morning": "Xayrli tong!",
+    "greeting_day": "Xayrli kun!",
+    "greeting_evening": "Xayrli kech!",
+    "track_today": "Bugungi holatni kuzating",
+    "track_today_named": "{name}, bugungi holatni kuzating",
+    "useful_products": "Foydali mahsulotlar",
+    "food_recommendations": "Ovqat tavsiyalari",
+    "log_meal": "Ovqat qayd qilish",
+    "log_exercise": "Mashq qayd qilish",
+    "body_measurements": "Tana o'lchovlari"
+  },
+  "score": {
+    "today_score": "Bugungi ball",
+    "great": "Zo'r natija!",
+    "keep_going": "Davom eting",
+    "lets_start": "Boshlaymiz!",
+    "health_index": "Sog'liq indeksi",
+    "status": "Holat",
+    "focus": "Diqqat",
+    "stable": "Barqaror",
+    "on_track": "Yo'lda",
+    "start": "Start",
+    "balance": "Balans",
+    "continue": "Davom",
+    "activity": "Faollik",
+    "summary_great": "Bugungi ritmingiz yaxshi. Shu tempni ushlab turing.",
+    "summary_good": "Kun yaxshi ketmoqda. Bir nechta odat bilan ball tez ko'tariladi.",
+    "summary_start": "Eng oson qadamdan boshlang: suv, vazifa yoki kayfiyatni belgilang."
+  },
+  "tasks": {
+    "title": "Vazifalar",
+    "completed": "{done}/{total} bajarildi",
+    "task_done": "Vazifa bajarildi",
+    "add_task": "Vazifa qo'shish",
+    "task_text_placeholder": "Vazifa matni...",
+    "add": "Qo'shish"
+  },
+  "water": {
+    "title": "Suv Tracker",
+    "subtitle": "Kunlik suv ichish kuzatuvi",
+    "constipation_banner": "Ich qotganligi sababli maqsad 12 stakanga oshirildi",
+    "remove_glass": "Stakan olib tashlash",
+    "add_glass": "Stakan qo'shish",
+    "breastfeed_reminder": "Sut berdingizmi? Suv iching!",
+    "glass": "stakan",
+    "today_log": "Bugungi log",
+    "goal": "Suv maqsadi"
+  },
+  "bowel": {
+    "title": "Ich Kelish Jurnali",
+    "subtitle": "Kundalik qaydlar",
+    "today_happened": "Bugun ich keldi",
+    "days_since": "Oxirgi ich kelishdan beri",
+    "day": "kun",
+    "log": "Qayd qilish",
+    "log_bowel": "Ich kelishini qayd qilish",
+    "choose_consistency": "Konsistensiya tanlang",
+    "notes_placeholder": "Izoh (ixtiyoriy)...",
+    "alert_warning": "{days} kun ich kelmagan",
+    "alert_warning_advice": "Tabiiy usullarni kuchaytiring: lavlagi, zaytun moyi, qorin massaji",
+    "alert_danger_advice": "Shifokorga murojaat qilishni o'ylab ko'ring"
+  },
+  "bristol": {
+    "hard": "Qattiq",
+    "normal": "Normal",
+    "soft": "Yumshoq",
+    "liquid": "Suyuq"
+  },
+  "mood": {
+    "title": "Bugungi kayfiyat",
+    "good": "Yaxshi",
+    "okay": "O'rtacha",
+    "bad": "Yomon"
+  },
+  "stats": {
+    "title": "Statistika",
+    "subtitle": "Natijalaringizni kuzating",
+    "weekly": "Haftalik",
+    "monthly": "Oylik",
+    "achievements": "Yutuqlar",
+    "analysis": "Tahlil"
+  },
+  "streak": {
+    "days_in_row": "kun ketma-ket",
+    "score_streak": "70%+ ball seriyasi",
+    "shield_available": "Qalqon mavjud — 1 kun o'tkazib yuborishingiz mumkin"
+  },
+  "tips": {
+    "title": "Maslahat"
+  },
+  "meals": {
+    "title": "Ovqatlanish",
+    "subtitle": "Kunlik kuzatuv",
+    "logged_count": "Bugun {count} ta ovqat qayd qilindi",
+    "sugar_free_day": "Shakarsiz kun!",
+    "sugar_free_msg": "Bugungi ovqatlaringiz shakarsiz. Davom eting!",
+    "total_calories": "Jami kaloriya",
+    "kcal": "kkal",
+    "meal": "ovqat",
+    "no_meals": "Ovqat qayd qilinmagan",
+    "no_meals_hint": "Birinchi ovqatni qayd qilish uchun + tugmasini bosing",
+    "log_meal": "Ovqat qayd qilish",
+    "what_did_you_eat": "Nima yedingiz?",
+    "calories_optional": "Kaloriya (ixtiyoriy)",
+    "has_sugar": "Shakar bor",
+    "sugar_free": "Shakarsiz",
+    "sugary": "Shakarli",
+    "meal_types": {
+      "breakfast": "Nonushta",
+      "lunch": "Tushlik",
+      "dinner": "Kechki ovqat",
+      "snack": "Snack"
+    }
+  },
+  "exercise": {
+    "title": "Mashqlar",
+    "subtitle": "Jismoniy faollik",
+    "today_minutes": "Bugun {minutes} daqiqa faollik",
+    "no_exercises": "Mashq qayd qilinmagan",
+    "no_exercises_hint": "Bugungi mashqni qayd qilish uchun + tugmasini bosing",
+    "log_exercise": "Mashq qayd qilish",
+    "time": "Vaqt",
+    "min": "daq",
+    "burned": "Yoqilgan",
+    "duration_min": "Davomiyligi (daqiqa)",
+    "types": {
+      "walking": "Yurish",
+      "running": "Yugurish",
+      "hiit": "HIIT",
+      "strength": "Kuch mashqi",
+      "yoga": "Yoga",
+      "stretching": "Cho'zilish",
+      "cycling": "Velosiped",
+      "other": "Boshqa"
+    }
+  },
+  "body": {
+    "title": "Tana ko'rsatkichlari",
+    "subtitle": "Kunlik o'lchovlar",
+    "monitoring": "Monitoring",
+    "weight": "Vazn",
+    "weight_hint": "Ertalab ochqoringa o'lchang",
+    "kg": "kg",
+    "waist": "Bel aylanasi",
+    "waist_hint": "Kindik atrofidan o'lchang",
+    "cm": "sm",
+    "blood_sugar": "Qon shakari",
+    "blood_sugar_hint": "mmol/L (glyukometr bilan)",
+    "fasting": "Ochqoringa (nahor)",
+    "after_meal": "Ovqatdan 2 soat keyin",
+    "sugar_normal": "Normal doirada (3.9–5.5 mmol/L)",
+    "sugar_elevated": "Biroz yuqori — ehtiyot bo'ling",
+    "sugar_high": "Yuqori — shifokorga murojaat qiling"
+  },
+  "food_guide": {
+    "title": "Mahsulotlar",
+    "beneficial": "Foydali",
+    "harmful": "Zararli",
+    "subtitles": {
+      "breastfeeding_constipation": "Ich kelishi uchun foydali va zararli",
+      "insulin_resistance": "Insulin boshqaruvi uchun tavsiyalar",
+      "fat_burning": "Yog' yoqish uchun to'g'ri ovqatlanish",
+      "sugar_free": "Shakarsiz hayot uchun mahsulotlar",
+      "general_wellness": "Sog'liq uchun foydali va zararli"
+    }
+  },
+  "settings": {
+    "title": "Sozlamalar",
+    "notifications": "Bildirishnomalar",
+    "water_goal": "Suv maqsadi",
+    "dark_mode": "Qorong'i rejim",
+    "food_list": "Foydali mahsulotlar ro'yxati",
+    "re_onboarding": "Qayta tanishtiruv",
+    "clear_data": "Ma'lumotlarni tozalash",
+    "clear_data_confirm_title": "Ma'lumotlarni tozalash",
+    "clear_data_confirm_msg": "Barcha saqlangan ma'lumotlar o'chiriladi. Bu amalni qaytarib bo'lmaydi.",
+    "disclaimer": "Bu ilova tibbiy maslahat bermaydi. Faqat kundalik odatlarni kuzatish uchun mo'ljallangan. Muammo davom etsa, shifokorga murojaat qiling. Barcha ma'lumot faqat telefoningizda saqlanadi — maxfiylik to'liq ta'minlanadi.",
+    "disclaimer_short": "Bu tibbiy maslahat emas. Belgilar kuchaysa yoki davom etsa, shifokorga murojaat qiling.",
+    "language": "Til"
+  },
+  "sidebar": {
+    "app_name": "Sog'liq Kuzatuvchi",
+    "app_tagline": "Kunlik ritm va sog'liq nazorati",
+    "customized_for": "{name} uchun moslashtirilgan"
+  },
+  "onboarding": {
+    "welcome": "Xush kelibsiz!",
+    "welcome_subtitle": "Sog'liq Kuzatuvchi — kundalik odatlaringizni kuzatib, sog'lig'ingizni yaxshilashga yordam beradi.",
+    "your_name": "Ismingiz",
+    "name_placeholder": "Masalan: Nodira",
+    "continue": "Davom etish",
+    "your_profile": "Sizning profilingiz",
+    "profile_subtitle": "Maslahatlarni moslash uchun",
+    "gender": "Jins",
+    "female": "Ayol",
+    "male": "Erkak",
+    "age": "Yosh",
+    "your_goals": "Maqsadlaringiz",
+    "goals_subtitle": "Bir yoki bir nechtasini tanlang",
+    "health_status": "Sog'liq holatingiz",
+    "conditions_subtitle": "Agar tegishli bo'lsa tanlang (ixtiyoriy)",
+    "reminders": "Eslatmalar",
+    "reminders_subtitle": "Sozlamalardan o'zgartirish mumkin",
+    "enable_reminders": "Eslatmalarni yoqish",
+    "reminders_disabled": "Eslatmalar o'chirilgan. Sozlamalardan istalgan vaqtda yoqishingiz mumkin.",
+    "start": "Boshlash!"
+  },
+  "common": {
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish",
+    "confirm": "Tasdiqlash",
+    "undo": "Bekor qilish",
+    "done": "Bajarildi",
+    "skip": "O'tkazish",
+    "close": "Yopish",
+    "back": "Orqaga"
+  },
+  "task_groups": {
+    "morning": "Ertalab",
+    "day": "Kun davomida",
+    "evening": "Kechqurun",
+    "extra": "Qo'shimcha",
+    "morning_time": "06:00-09:00",
+    "day_time": "09:00-18:00",
+    "evening_time": "18:00-22:00",
+    "extra_time": "Ixtiyoriy"
+  },
+  "progress": {
+    "start": "Bugun yangi kun! Boshlaymiz!",
+    "quarter": "Davom eting, siz uddalaysiz!",
+    "half": "Yarmisiga yetdingiz! Zo'r!",
+    "almost": "Zo'r! Biroz qoldi!",
+    "complete": "Tabriklaymiz! Bugun barcha vazifalarni bajardingiz!"
+  },
+  "dark_mode": {
+    "auto": "Avto",
+    "on": "Yoqish",
+    "off": "O'chirish"
+  },
+  "reminders": {
+    "morning_water": "Ertalab iliq suv",
+    "breakfast": "Nonushta eslatmasi",
+    "lunch_water": "Tushlik + suv",
+    "walking": "Piyoda yurish",
+    "belly_massage": "Qorin massaji",
+    "kefir_flax": "Kefir + zig'ir"
+  }
+}

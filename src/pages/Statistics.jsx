@@ -1,6 +1,9 @@
 import { useState, lazy, Suspense } from 'react'
 import { useStreak } from '../hooks/useStreak'
+import { useProfile } from '../hooks/useProfile'
+import { useChallenges } from '../hooks/useChallenges'
 import PageHeader from '../components/shared/PageHeader'
+import ChallengeCard from '../components/dashboard/ChallengeCard'
 import LoadingSpinner from '../components/shared/LoadingSpinner'
 
 const WeeklyCharts = lazy(() => import('../components/stats/WeeklyCharts'))
@@ -18,10 +21,12 @@ const tabs = [
 export default function Statistics() {
   const [activeTab, setActiveTab] = useState('weekly')
   const { earnedAchievements, weeklySummary, historicalData } = useStreak()
+  const { profile } = useProfile()
+  const challenge = useChallenges()
 
   return (
     <div>
-      <PageHeader title="Statistika" subtitle="Natijalaringizni kuzating" />
+      <PageHeader title="Statistika" subtitle="Natijalaringizni kuzating" eyebrow="Tahlil" />
 
       <div className="px-4">
         <div className="card flex p-1.5 mb-4">
@@ -44,15 +49,18 @@ export default function Statistics() {
           <div className="space-y-4 pb-6">
             {activeTab === 'weekly' && (
               <>
-                <WeeklySummary summary={weeklySummary} />
+                <WeeklySummary summary={weeklySummary} profile={profile} />
+                {challenge.activeChallenge && (
+                  <ChallengeCard {...challenge} onClaim={challenge.claimReward} />
+                )}
                 <div className="lg:grid lg:grid-cols-2 lg:gap-4 space-y-4 lg:space-y-0">
-                  <WeeklyCharts historicalData={historicalData} />
-                  <TrendAnalysis historicalData={historicalData} />
+                  <WeeklyCharts historicalData={historicalData} profile={profile} />
+                  <TrendAnalysis historicalData={historicalData} profile={profile} />
                 </div>
               </>
             )}
             {activeTab === 'monthly' && (
-              <MonthlyHeatmap historicalData={historicalData} />
+              <MonthlyHeatmap historicalData={historicalData} profile={profile} />
             )}
             {activeTab === 'achievements' && (
               <AchievementBadges achievements={earnedAchievements} />

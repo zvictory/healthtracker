@@ -1,23 +1,33 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { motion, useSpring, useTransform, useMotionValue } from 'motion/react'
 import ProgressRing from '../shared/ProgressRing'
+import Sparkline from '../shared/Sparkline'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 
-export default function HealthScoreCard({ score }) {
-  const [displayScore, setDisplayScore] = useState(0)
+function AnimatedNumber({ value, color }) {
+  const reduced = useReducedMotion()
+  const mv = useMotionValue(0)
+  const spring = useSpring(mv, { stiffness: 60, damping: 18 })
+  const display = useTransform(spring, (v) => Math.round(v))
 
   useEffect(() => {
-    let current = 0
-    const step = Math.max(score / 30, 1)
-    const timer = setInterval(() => {
-      current += step
-      if (current >= score) {
-        setDisplayScore(score)
-        clearInterval(timer)
-      } else {
-        setDisplayScore(Math.round(current))
-      }
-    }, 16)
-    return () => clearInterval(timer)
-  }, [score])
+    mv.set(reduced ? value : 0)
+    if (!reduced) {
+      // Small delay so the spring starts after mount
+      const t = setTimeout(() => mv.set(value), 50)
+      return () => clearTimeout(t)
+    }
+  }, [value, mv, reduced])
+
+  if (reduced) {
+    return <span style={{ color }}>{value}</span>
+  }
+
+  return <motion.span style={{ color }}>{display}</motion.span>
+}
+
+export default function HealthScoreCard({ score, historicalData = [] }) {
+  const reduced = useReducedMotion()
 
   const getGradient = () => {
     if (score >= 70) return ['#059669', '#10B981']
@@ -52,7 +62,12 @@ export default function HealthScoreCard({ score }) {
   return (
     <div className="card relative overflow-hidden p-6 lg:p-7">
       <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-      <div className="absolute -right-10 top-0 h-36 w-36 rounded-full blur-3xl" style={{ background: `${getColor()}22` }} />
+      <motion.div
+        className="absolute -right-10 top-0 h-36 w-36 rounded-full blur-3xl"
+        style={{ background: `${getColor()}22` }}
+        animate={reduced ? {} : { scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+      />
 
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -74,10 +89,20 @@ export default function HealthScoreCard({ score }) {
           gradientColors={getGradient()}
         >
           <div className="text-center">
-            <div className="text-5xl font-extrabold tracking-tight" style={{ color: getColor(), animation: 'count-up 0.5s ease-out' }}>
-              {displayScore}
+            <div className="text-5xl font-extrabold tracking-tight">
+              <AnimatedNumber value={score} color={getColor()} />
             </div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-text-tertiary)] mt-1">Sog'liq indeksi</div>
+            {historicalData.length >= 2 && (
+              <div className="mt-2 flex justify-center">
+                <Sparkline
+                  data={[...historicalData.slice(0, 7)].reverse().map(d => d.score || 0)}
+                  color={getColor()}
+                  height={20}
+                  width={72}
+                />
+              </div>
+            )}
           </div>
         </ProgressRing>
 
