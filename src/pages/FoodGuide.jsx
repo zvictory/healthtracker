@@ -1,13 +1,26 @@
-import { useState } from 'react'
-import { beneficialFoods, harmfulFoods } from '../data/foodGuide'
+import { useState, useMemo } from 'react'
 import { useProfile } from '../hooks/useProfile'
+import { getFoodGuide } from '../data/foodGuides'
 import PageHeader from '../components/shared/PageHeader'
+
+const SUBTITLES = {
+  breastfeeding_constipation: 'Ich kelishi uchun foydali va zararli',
+  insulin_resistance: 'Insulin boshqaruvi uchun tavsiyalar',
+  fat_burning: "Yog' yoqish uchun to'g'ri ovqatlanish",
+  sugar_free: 'Shakarsiz hayot uchun mahsulotlar',
+  general_wellness: "Sog'liq uchun foydali va zararli",
+}
 
 export default function FoodGuide() {
   const [tab, setTab] = useState('good')
   const { profile } = useProfile()
-  const hasBowelModule = profile.activeModules?.includes('bowel')
-  const subtitle = hasBowelModule ? 'Ich kelishi uchun foydali va zararli' : 'Sog\'liq uchun foydali va zararli'
+
+  const { beneficial, harmful } = useMemo(
+    () => getFoodGuide(profile.taskSet),
+    [profile.taskSet]
+  )
+
+  const subtitle = SUBTITLES[profile.taskSet] || SUBTITLES.general_wellness
 
   return (
     <div>
@@ -35,7 +48,7 @@ export default function FoodGuide() {
 
         {tab === 'good' ? (
           <div className="space-y-3 pb-6 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
-            {beneficialFoods.map(food => (
+            {beneficial.map(food => (
               <div key={food.name} className="card p-4 border-l-4 border-l-[var(--color-success)]">
                 <div className="flex items-start gap-3">
                   <span className="text-2xl">{food.emoji}</span>
@@ -50,7 +63,7 @@ export default function FoodGuide() {
           </div>
         ) : (
           <div className="space-y-3 pb-6 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
-            {harmfulFoods.map(food => (
+            {harmful.map(food => (
               <div key={food.name} className="card p-4 border-l-4 border-l-[var(--color-danger)]">
                 <div className="flex items-start gap-3">
                   <span className="text-2xl">{food.emoji}</span>

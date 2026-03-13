@@ -24,10 +24,11 @@ export const dynamicTips = {
 
 export const motivationalMessages = {
   task_complete: [
-    "Ajoyib! Ichaklar bunga minnatdor 💪",
+    "Ajoyib! Tanangiz bunga minnatdor 💪",
     "Zo'r! Bir qadam oldinga! 🌟",
     "Barakalla! Davom eting! ✨",
     "Sog'lom tanlov! 🎯",
+    "Ritmlashyapsiz! 🎶",
   ],
   streak: [
     "🔥 Ketma-ket {days} kun! Davom eting!",
