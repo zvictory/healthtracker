@@ -12,6 +12,9 @@ const BowelJournal = lazy(() => import('./pages/BowelJournal'))
 const Statistics = lazy(() => import('./pages/Statistics'))
 const FoodGuide = lazy(() => import('./pages/FoodGuide'))
 const Settings = lazy(() => import('./pages/Settings'))
+const MealTracker = lazy(() => import('./pages/MealTracker'))
+const ExerciseTracker = lazy(() => import('./pages/ExerciseTracker'))
+const BodyMetrics = lazy(() => import('./pages/BodyMetrics'))
 
 export default function App() {
   const { isCompleted } = useOnboarding()
@@ -33,6 +36,9 @@ export default function App() {
               <Route path="/bowel" element={<BowelJournal />} />
               <Route path="/stats" element={<Statistics />} />
               <Route path="/food-guide" element={<FoodGuide />} />
+              <Route path="/meals" element={<MealTracker />} />
+              <Route path="/exercise" element={<ExerciseTracker />} />
+              <Route path="/body" element={<BodyMetrics />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
             <Route path="/onboarding" element={<Navigate to="/" replace />} />

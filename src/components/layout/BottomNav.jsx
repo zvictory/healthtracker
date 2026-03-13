@@ -1,21 +1,27 @@
 import { NavLink } from 'react-router-dom'
-import { Home, ListChecks, Droplets, BookOpen, BarChart3, Apple } from 'lucide-react'
+import { Home, ListChecks, Droplets, BookOpen, BarChart3, UtensilsCrossed, Dumbbell, Scale } from 'lucide-react'
 import { useProfile } from '../../hooks/useProfile'
 
 function getTabs(activeModules) {
-  const hasBowelModule = activeModules?.includes('bowel')
-
-  return [
+  const tabs = [
     { path: '/', icon: Home, label: 'Bosh sahifa' },
     { path: '/tasks', icon: ListChecks, label: 'Vazifalar' },
     { path: '/water', icon: Droplets, label: 'Suv' },
-    hasBowelModule
-      ? { path: '/bowel', icon: BookOpen, label: 'Jurnal' }
-      : { path: '/stats', icon: BarChart3, label: 'Statistika' },
-    hasBowelModule
-      ? { path: '/stats', icon: BarChart3, label: 'Statistika' }
-      : { path: '/food-guide', icon: Apple, label: 'Mahsulotlar' },
   ]
+
+  // 4th tab — profile-specific module
+  if (activeModules?.includes('bowel')) {
+    tabs.push({ path: '/bowel', icon: BookOpen, label: 'Jurnal' })
+  } else if (activeModules?.includes('meals')) {
+    tabs.push({ path: '/meals', icon: UtensilsCrossed, label: 'Ovqat' })
+  } else if (activeModules?.includes('exercise')) {
+    tabs.push({ path: '/exercise', icon: Dumbbell, label: 'Mashq' })
+  }
+
+  // 5th tab — stats always
+  tabs.push({ path: '/stats', icon: BarChart3, label: 'Statistika' })
+
+  return tabs
 }
 
 export default function BottomNav() {

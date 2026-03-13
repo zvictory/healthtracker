@@ -1,24 +1,25 @@
 import { NavLink } from 'react-router-dom'
-import { Heart, Home, ListChecks, Droplets, BookOpen, BarChart3, Apple, Settings, Info } from 'lucide-react'
+import { Heart, Home, ListChecks, Droplets, BookOpen, BarChart3, Apple, Settings, Info, UtensilsCrossed, Dumbbell, Scale } from 'lucide-react'
 import { useProfile } from '../../hooks/useProfile'
 
 function getMainNav(activeModules) {
-  const hasBowelModule = activeModules?.includes('bowel')
-
+  const m = activeModules || []
   return [
     { path: '/', icon: Home, label: 'Bosh sahifa' },
     { path: '/tasks', icon: ListChecks, label: 'Vazifalar' },
     { path: '/water', icon: Droplets, label: 'Suv' },
-    ...(hasBowelModule ? [{ path: '/bowel', icon: BookOpen, label: 'Jurnal' }] : []),
+    ...(m.includes('bowel') ? [{ path: '/bowel', icon: BookOpen, label: 'Jurnal' }] : []),
+    ...(m.includes('meals') ? [{ path: '/meals', icon: UtensilsCrossed, label: 'Ovqatlanish' }] : []),
+    ...(m.includes('exercise') ? [{ path: '/exercise', icon: Dumbbell, label: 'Mashqlar' }] : []),
+    ...(m.includes('body') ? [{ path: '/body', icon: Scale, label: 'Tana' }] : []),
     { path: '/stats', icon: BarChart3, label: 'Statistika' },
   ]
 }
 
 function getSecondaryNav(activeModules) {
-  const hasFoodGuideModule = activeModules?.includes('food_guide')
-
+  const m = activeModules || []
   return [
-    ...(hasFoodGuideModule ? [{ path: '/food-guide', icon: Apple, label: 'Mahsulotlar' }] : []),
+    ...(m.includes('food_guide') ? [{ path: '/food-guide', icon: Apple, label: 'Mahsulotlar' }] : []),
     { path: '/settings', icon: Settings, label: 'Sozlamalar' },
   ]
 }
